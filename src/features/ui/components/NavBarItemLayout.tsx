@@ -22,7 +22,7 @@ export default function NavBarItemLayout({ children }: Props) {
 			<div className={"px-2.5 flex justify-center items-center"}>
 				{children[0]}
 			</div>
-			<motion.div className={"px-2.5 flex justify-center items-center absolute left-[42px]"}
+			<motion.div className={"px-3 flex justify-center items-center"}
 			            variants={variants}
 			>
 				{children[1]}

@@ -4,14 +4,14 @@ import Wallet from "@features/user/account/Wallet";
 
 export default function AccountPage() {
 	return (
-		<div className={"w-full h-full"}>
-			<div className={"w-full h-full flex justify-center space-x-6 overflow-x-auto"}>
+		<div className={"w-full h-full "}>
+			<div className={"w-full h-full flex justify-safe-center space-x-6 overflow-x-auto"}>
 
-				<div className={"max-w-[360px] w-full h-full"}>
-					<Profil />
+				<div className={"w-fit h-full"}>
+					<Wallet/>
 				</div>
-				<div className={"max-w-[360px] w-full h-full"}>
-					<Wallet />
+				<div className={"w-fit h-full"}>
+					<Profil/>
 				</div>
 
 			</div>

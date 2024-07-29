@@ -13,13 +13,13 @@ export default function SideBar()
 
 	const variants : Variants = {
 		open: {
-			width: 260,
+			width: "16.25rem",
 			// transition: {
 			// 	when: "beforeChildren",
 			// }
 		},
 		closed: {
-			width: 71,
+			width: "5.75rem",
 			// transition: {
 			// 	when: "afterChildren",
 			// }
@@ -30,7 +30,7 @@ export default function SideBar()
 
 
 	return (
-		<motion.div className={"relative h-full px-5 py-2.5 overflow-hidden min-w-fit"}
+		<motion.div className={"relative h-full px-5 py-2.5 overflow-hidden flex-shrink-0"}
 		            variants={variants}
 		            initial={false}
 		            animate={open ? "open" : "closed"}
@@ -41,13 +41,13 @@ export default function SideBar()
 			            damping: 30,
 			            // mass: 0.7
 		            }}
-		            onMouseEnter={ () => setOpen(true) }
-		            onMouseLeave={ () => setOpen(false) }
+		            // onMouseEnter={ () => setOpen(true) }
+		            // onMouseLeave={ () => setOpen(false) }
 		>
 
 			{/*<div className={"invisible bg-amber-300 size-8 px-2.5 box-content"} />*/}
 
-			<div className={"absolute top-0 left-0 w-full h-full bg-[#0e191e] px-5 py-2.5 space-y-[100px]"}>
+			<div className={"absolute top-0 left-0 w-full h-full bg-[#0e191e] px-5 py-2.5 space-y-28"}>
 
 				<div>
 					<NavBarItemLayout>

@@ -69,7 +69,7 @@ export default function NavLink({ href, Icon, label }: props) {
 						<motion.div className={"text-custom_white/80 group-hover:text-custom_white group-[.active]:text-white"}>
 							<Icon className={"size-8"}/>
 						</motion.div>
-						<motion.span className={"text-custom_white/80 text-lg text-center whitespace-nowrap group-hover:text-custom_white group-[.active]:text-white"}>
+						<motion.span className={"inline-block text-custom_white/80 text-lg text-center whitespace-nowrap group-hover:text-custom_white group-[.active]:text-white"}>
 							{label}
 						</motion.span>
 					</NavBarItemLayout>

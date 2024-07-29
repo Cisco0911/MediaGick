@@ -12,7 +12,7 @@ import {ArrowRightCircleIcon} from "@heroicons/react/24/outline";
 export default function Wallet() {
 	return (
 		<div className={clsx(
-			"max-w-[360px] w-full h-full rounded-3xl bg-[#0e191e]",
+			"max-w-[360px] min-w-[30rem] w-full h-full rounded-3xl bg-[#0e191e]",
 			"flex flex-col justify-between items-center px-[50px] py-[40px]"
 		)}>
 
@@ -68,7 +68,7 @@ export default function Wallet() {
 				</div>
 
 				<motion.button
-					className={"max-w-80 w-full px-2 xl:px-10 py-4 rounded-xl bg-primary flex justify-center items-center space-x-2.5"}
+					className={"max-w-80 w-full px-2 xl:px-10 py-4 rounded-xl bg-[#5ac8f4] flex justify-center items-center space-x-2.5"}
 					whileHover={{scale: 1.05}}
 					whileTap={{scale: 0.9}}
 				>

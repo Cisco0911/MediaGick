@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Background from "@features/ui/components/Background";
 import StoreProvider from "@app/StoreProvider";
+import HtmlWrapper from "@features/ui/components/HtmlWrapper";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -16,16 +17,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body>
-	      {/*<Background />*/}
-	      <StoreProvider>
-		      <div className={"z-10 w-full h-full"}>
-			      {children}
-		      </div>
-	      </StoreProvider>
-      </body>
-    </html>
-  );
+
+	return (
+		<HtmlWrapper>
+
+			<body>
+			{/*<Background />*/}
+			<StoreProvider>
+				<div className={"z-10 w-full h-full"}>
+					{children}
+				</div>
+			</StoreProvider>
+			</body>
+
+		</HtmlWrapper>
+	);
 }

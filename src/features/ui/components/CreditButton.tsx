@@ -41,7 +41,7 @@ export default function CreditButton({isNavOpen}: Props) {
 
 	const childVariants: Variants = {
 		initial: {
-			x: - 30
+			x: "-2.375rem"
 		},
 		hover: {
 			x: 0
@@ -50,7 +50,7 @@ export default function CreditButton({isNavOpen}: Props) {
 			x: 0
 		},
 		navOpen: {
-			x: - 30
+			x: "-2.375rem"
 		}
 	}
 
@@ -74,7 +74,7 @@ export default function CreditButton({isNavOpen}: Props) {
 			<motion.div className={"relative z-10 flex items-center"}
 			            variants={childVariants}>
 
-				<div className={"min-w-[6px] max-w-[6px] min-h-[6px] max-h-[6px] mx-4 bg-black rounded-full"}>
+				<div className={"min-w-1.5 max-w-1.5 min-h-1.5 max-h-1.5 mx-4 bg-black rounded-full"}>
 					<AnimatePresence>
 						{isActive && <motion.div className={"glowing-dot"} animate={{ opacity: 1 }} exit={{ opacity: 0 }}/>}
 					</AnimatePresence>
@@ -88,7 +88,7 @@ export default function CreditButton({isNavOpen}: Props) {
 					<motion.span
 						className={"flex items-center text-custom_white/80 text-lg text-center whitespace-nowrap group-hover:text-custom_white group-[.active]:text-white"}>
 						Crédits
-						<div className={"min-w-[3px] max-w-[3px] min-h-[3px] max-h-[3px] mx-1 bg-custom_white/80 group-hover:bg-custom_white group-[.active]:bg-amber-400 rounded-full"}/>
+						<div className={"min-w-1 max-w-1 min-h-1 max-h-1 mx-1 bg-custom_white/80 group-hover:bg-custom_white group-[.active]:bg-amber-400 rounded-full"}/>
 							200k
 					</motion.span>
 				</NavBarItemLayout>

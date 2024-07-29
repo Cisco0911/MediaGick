@@ -9,8 +9,8 @@ import {motion} from "framer-motion";
 export default function Profil() {
 	return (
 		<div className={clsx(
-			"max-w-[360px] w-full h-full rounded-3xl bg-[#0e191e]",
-			"flex flex-col justify-between items-center px-[50px] py-[40px]"
+			"max-w-[360px] min-w-[30rem] w-full rounded-3xl bg-[#0e191e]",
+			"flex flex-col justify-between items-center px-[50px] py-[40px] space-y-5"
 		)}>
 
 			<div className={"flex justify-center items-center space-x-2.5"}>
