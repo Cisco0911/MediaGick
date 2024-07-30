@@ -41,8 +41,8 @@ export default function SideBar()
 			            damping: 30,
 			            // mass: 0.7
 		            }}
-		            // onMouseEnter={ () => setOpen(true) }
-		            // onMouseLeave={ () => setOpen(false) }
+		            onMouseEnter={ () => setOpen(true) }
+		            onMouseLeave={ () => setOpen(false) }
 		>
 
 			{/*<div className={"invisible bg-amber-300 size-8 px-2.5 box-content"} />*/}

@@ -91,30 +91,32 @@ export default function SignUp() {
 
 				<div className={"w-full min-h-10 my-10"}>
 					<div className={"relative w-full h-full flex justify-center items-center"}>
-						{
-							Object.keys(form).map((key) => (
-								<AnimatePresence key={key} initial={false}>
-									{
-										Number(key) === selectedField &&
-										(
-											<>
-												<motion.span
-													className={"absolute text-center text-4xl text-white font-bold"}
-													initial={{opacity: 0}}
-													animate={{opacity: 1, transition: {duration: 2, delay: 0.2}}}
-													exit={{opacity: 0, scale: 0.5, transition: {duration: 0.1}}}
-												>
-													{form[Number(key)].label}
 
-												</motion.span>
-												<span
-													className={"invisible pointer-events-none text-center text-4xl text-white font-bold"}> {form[Number(key)].label} </span>
-											</>
-										)
-									}
-								</AnimatePresence>
-							))
-						}
+						<AnimatePresence initial={false} mode={"wait"}>
+
+							{
+								Object.keys(form).map((key) => (
+									Number(key) === selectedField &&
+									(
+										<div key={key}>
+											<motion.span
+												className={"inline-block text-center text-4xl text-white font-bold"}
+												initial={{opacity: 0}}
+												animate={{opacity: 1, transition: {duration: 2, delay: 0.1}}}
+												exit={{opacity: 0, scale: 0.5, transition: {duration: 0.1}}}
+											>
+												{form[Number(key)].label}
+
+											</motion.span>
+											{/*<span*/}
+											{/*	className={"invisible pointer-events-none text-center text-4xl text-white font-bold"}> {form[Number(key)].label} </span>*/}
+										</div>
+									)
+								))
+							}
+
+						</AnimatePresence>
+
 					</div>
 				</div>
 

@@ -4,13 +4,15 @@ import clsx from "clsx";
 import {IdentificationIcon} from "@heroicons/react/24/solid";
 import {PencilSquareIcon} from "@heroicons/react/24/solid";
 import {motion} from "framer-motion";
+import {Popover, PopoverTrigger, PopoverContent} from "@nextui-org/popover";
+import ChangePasswordForm from "@features/ui/components/ChangePasswordForm";
 
 
 export default function Profil() {
 	return (
 		<div className={clsx(
 			"max-w-[360px] min-w-[30rem] w-full rounded-3xl bg-[#0e191e]",
-			"flex flex-col justify-between items-center px-[50px] py-[40px] space-y-5"
+			"flex flex-col justify-between items-center px-12 py-10 space-y-5"
 		)}>
 
 			<div className={"flex justify-center items-center space-x-2.5"}>
@@ -37,12 +39,7 @@ export default function Profil() {
 
 			</div>
 
-			<motion.button className={"max-w-80 w-full px-2 xl:px-10 py-4 rounded-xl bg-custom_white text-xl font-medium"}
-			                whileHover={{scale: 1.1}}
-			                whileTap={{scale: 0.9}}
-			>
-				Changer de mot de passe
-			</motion.button>
+			<ChangePasswordForm />
 
 		</div>
 	)

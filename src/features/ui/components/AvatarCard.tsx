@@ -20,8 +20,8 @@ const AvatarCard = ({children, label, isActive, activeColor, rotate, className}:
 		hover: {
 			scale: 1.2,
 			fontWeight: "bold",
-			padding: "0 10px 0 10px",
-			borderRadius: "10px",
+			padding: "0 0.625rem 0 0.625rem",
+			borderRadius: "0.625rem",
 			backgroundColor: activeColor + "b2",
 		},
 		active: {}

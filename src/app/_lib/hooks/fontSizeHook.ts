@@ -17,6 +17,7 @@ function useZoomFontSize(baseFontSize = 20) {
 		// Function to adjust the font size based on zoom level
 		function adjustFontSize() {
 			const zoomLevel = window.devicePixelRatio;
+			console.log(zoomLevel)
 			const newFontSize = baseFontSize / zoomLevel;
 			setFontSize(newFontSize);
 		}
@@ -39,3 +40,34 @@ function useZoomFontSize(baseFontSize = 20) {
 }
 
 export default useZoomFontSize;
+
+
+
+
+
+export const useResponsiveFontSize = (baseFontSize: number, baseHeight: number) => {
+	const [fontSize, setFontSize] = useState(baseFontSize);
+
+	useEffect(() => {
+		const updateFontSize = () => {
+			const { innerHeight} = window;
+
+			const heightRatio = Math.max(500, innerHeight) / baseHeight;
+
+			// Ajustement de la taille de la police basé sur la taille de l'écran et le dpr
+			const newFontSize = baseFontSize * heightRatio;
+
+			setFontSize(newFontSize);
+		};
+
+		updateFontSize();
+		window.addEventListener('resize', updateFontSize);
+
+		return () => {
+			window.removeEventListener('resize', updateFontSize);
+		};
+	}, []);
+
+	return fontSize;
+};
+

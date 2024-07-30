@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
-import {CUSTOM_WHITE, PRIMARY_COLOR, SECONDARY_COLOR} from "./src/features/ui/theme";
+import {CUSTOM_WHITE, FOURTH_COLOR, PRIMARY_COLOR, SECONDARY_COLOR, TERTIARY_COLOR} from "./src/features/ui/theme";
+import {nextui} from "@nextui-org/react";
 
 const config: Config = {
   content: [
@@ -7,12 +8,15 @@ const config: Config = {
 	  "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
 	  "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
 	  "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
+	  "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
 	    colors: {
 		    primary: PRIMARY_COLOR,
 		    secondary: SECONDARY_COLOR,
+		    tertiary: TERTIARY_COLOR,
+		    fourth: FOURTH_COLOR,
 		    custom_white: CUSTOM_WHITE,
 	    },
 	    backgroundImage: {
@@ -22,7 +26,9 @@ const config: Config = {
 	    },
     },
   },
-  plugins: [
+	darkMode: "class",
+	plugins: [
+	  nextui(),
 	  // require('@tailwindcss/forms'),
   ],
 };
