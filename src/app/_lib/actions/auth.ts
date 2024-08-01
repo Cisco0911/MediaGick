@@ -13,6 +13,23 @@ const API_BASE_URL = process.env.API_BASE_URL
 
 
 
+class ClientError extends Error {}
+
+function action<T extends any[], U>(
+	fn: (...args: T) => Promise<U>,
+): (
+	...args: T
+) => Promise<{ ok: true, data?: U } | { ok: false; error: string }> {
+	return async (...args: T) => {
+		try {
+			return { ok: true, data: await fn(...args) };
+		} catch (err: unknown) {
+			if (err instanceof ClientError) return {ok: false, error: err.message };
+			throw err;
+		}
+	};
+}
+
 
 function secondsFromNow(inputDate: string): number {
 
@@ -22,7 +39,7 @@ function secondsFromNow(inputDate: string): number {
 }
 
 
-export async function login(email: string, password: string) {
+export const login = action(async (email: string, password: string) => {
 
 	let res: Response
 
@@ -45,7 +62,7 @@ export async function login(email: string, password: string) {
 	const content: any = await res.json()
 
 	if (!res.ok) {
-		throw new Error(`${content.detail}`)
+		throw new ClientError(`${content.detail}`)
 	}
 
 	const userSession  = parseToUserSession(content)
@@ -64,9 +81,9 @@ export async function login(email: string, password: string) {
 		path: '/',
 	})
 
-	return true
+	return ""
 
-}
+})
 
 type signUpSchema = {
 	nom?: string;
@@ -80,7 +97,7 @@ type signUpSchema = {
 	type_contenu_prefere?: TypeContenuPrefereEnum;
 	publics_cibles: {libelle: PublicsCiblesEnum}[];
 }
-export async function signUp(user: signUpSchema) {
+export const signUp = action(async (user: signUpSchema)=> {
 
 	let res : Response
 
@@ -106,9 +123,9 @@ export async function signUp(user: signUpSchema) {
 		throw new Error(`${JSON.stringify(content.detail)}`)
 	}
 
-	return content
+	return ""
 
-}
+})
 
 export async function getUserSession(){
 
@@ -120,7 +137,7 @@ export async function getUserSession(){
 	return session
 }
 
-export async function getNewAccessToken(refreshToken: string) {
+export const getNewAccessToken = action(async (refreshToken: string) => {
 	let res: Response
 	try {
 		res = await fetch(`${API_BASE_URL}/api/v1/auth/refresh-token?refresh_token=${refreshToken}`, {
@@ -136,7 +153,7 @@ export async function getNewAccessToken(refreshToken: string) {
 	const content: any = await res.json()
 
 	if (!res.ok) {
-		throw new Error(`${content.detail}`)
+		throw new ClientError(`${content.detail}`)
 	}
 
 	const {access_token, access_expiration, refresh_token, refresh_expiration} = content
@@ -164,10 +181,10 @@ export async function getNewAccessToken(refreshToken: string) {
 		path: '/',
 	});
 
-	return true
-}
+	return ""
+})
 
-export async function logout() {
+export const logout = action(async () => {
 
 	let res: Response
 
@@ -188,7 +205,7 @@ export async function logout() {
 
 	if (!res.ok) {
 		console.log(JSON.stringify(content))
-		throw new Error(`${content.detail}`)
+		throw new ClientError(`${content.detail}`)
 	}
 	else {
 		cookies().delete("session");
@@ -196,12 +213,12 @@ export async function logout() {
 
 		redirect("/login")
 
-		return true
+		return ""
 	}
 
-}
+})
 
-export async function changePwd(oldPwd: string, newPwd: string) {
+export const changePwd = action(async (oldPwd: string, newPwd: string) => {
 
 	let res: Response
 
@@ -234,7 +251,7 @@ export async function changePwd(oldPwd: string, newPwd: string) {
 
 	await logout()
 
-	return true
+	return ""
 
-}
+})
 

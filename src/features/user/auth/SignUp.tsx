@@ -80,7 +80,7 @@ export default function SignUp() {
 
 	const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
-		let toastId: string = "";
+		// let toastId: string = "";
 
 		try {
 
@@ -98,7 +98,7 @@ export default function SignUp() {
 			}
 
 			setPending(true);
-			toastId = toast.loading('Inscription...');
+			const toastId = toast.loading('Inscription...');
 
 			const res = await signUp(
 				{
@@ -107,22 +107,21 @@ export default function SignUp() {
 				}
 			);
 
-			const newUser  = parseToUser(res);
+			if (res.ok){
+				toast.dismiss(toastId);
+				toast.success("Inscription reussie");
 
-			console.log(newUser)
+				router.push("/login")
+			}
+			else {
+				toast.dismiss(toastId);
+				toast.error(`${res.error}`);
+			}
 
-			dispatch(setUser(newUser));
 
-
-			toast.dismiss(toastId);
-			toast.success("Inscription reussie");
-
-			router.push("/login")
 		}
 		catch (err) {
 			console.log(err);
-			toast.dismiss(toastId);
-			toast.error(`${err}`);
 		}
 	}
 

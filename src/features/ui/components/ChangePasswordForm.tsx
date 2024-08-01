@@ -34,7 +34,7 @@ export default function ChangePasswordForm() {
 	const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault()
 
-		let toastId = ""
+		// let toastId = ""
 
 		try {
 			if (!pwdValidityFuncs.oldPassword(pwdForm.oldPassword) ||
@@ -49,18 +49,21 @@ export default function ChangePasswordForm() {
 			setPending(true);
 			// toastId = toast.loading('Opération en cours...');
 
-			const ok = await changePwd(pwdForm.oldPassword, pwdForm.newPassword);
+			const res = await changePwd(pwdForm.oldPassword, pwdForm.newPassword);
 
-			if (ok){
-				toast.dismiss(toastId);
+			if (res.ok){
+				// toast.dismiss(toastId);
 				toast.success("Opération reussie");
 
 				setIsOpen(false);
 			}
+			else {
+				// toast.dismiss(toastId);
+				toast.error(`${res.error}`);
+			}
 		}
 		catch (err) {
-			toast.dismiss(toastId);
-			toast.error(`${err}`);
+			console.log(err)
 		}
 		finally {
 			setPending(false);

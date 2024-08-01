@@ -35,7 +35,7 @@ const Login: React.FC = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		let toastId = ""
+		// let toastId = ""
 
 		try {
 			if (!emailValidityFn(user.email) || !passwordValidityFn(user.mot_de_passe)) {
@@ -46,20 +46,23 @@ const Login: React.FC = () => {
 			}
 
 			setPending(true);
-			toastId = toast.loading('Connexion...');
+			const toastId = toast.loading('Connexion...');
 
-			const ok = await login(user.email!, user.mot_de_passe!);
+			const res = await login(user.email!, user.mot_de_passe!);
 
-			if (ok){
+			if (res.ok){
 				toast.dismiss(toastId);
 				toast.success("Connexion reussie");
 
 				router.push("/dashboard")
 			}
+			else {
+				toast.dismiss(toastId);
+				toast.error(`${res.error}`);
+			}
 		}
 		catch (err) {
-			toast.dismiss(toastId);
-			toast.error(`${err}`);
+			console.log(err)
 		}
 		finally {
 			setPending(false);
