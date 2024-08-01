@@ -5,7 +5,6 @@ import AvatarCard from "@features/ui/components/AvatarCard";
 import Image from "next/image";
 import imagePreference from "@app/_assets/image/image-preference.png";
 import videoPreference from "@app/_assets/image/video-preference.png";
-import {TypeContenuPrefere} from "@features/user/userSlice";
 import {TypeContenuPrefereEnum} from "@app/_lib/enums";
 
 
