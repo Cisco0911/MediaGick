@@ -10,8 +10,8 @@ import {TypeContenuPrefereEnum} from "@app/_lib/enums";
 
 
 type props = {
-	value: TypeContenuPrefere | null | undefined,
-	onSelect: (value: TypeContenuPrefere) => void,
+	value: TypeContenuPrefereEnum | null | undefined,
+	onSelect: (value: TypeContenuPrefereEnum) => void,
 }
 
 

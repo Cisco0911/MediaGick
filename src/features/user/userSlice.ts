@@ -2,38 +2,67 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {PublicsCiblesEnum, SexeEnum, TypeContenuPrefereEnum} from "@app/_lib/enums";
 
 
-export type Sexe = keyof typeof SexeEnum;
-
-export type TypeContenuPrefere = keyof typeof TypeContenuPrefereEnum;
-
-export type PublicsCibles = (keyof typeof PublicsCiblesEnum)[];
+// export type Sexe = keyof typeof SexeEnum;
+//
+// export type TypeContenuPrefere = typeof TypeContenuPrefereEnum[keyof typeof TypeContenuPrefereEnum];
+//
+// export type PublicsCibles = (keyof typeof PublicsCiblesEnum)[];
 
 
 export interface User {
-	nom?: string | null;
-	prenom?: string | null;
-	email?: string | null;
-	age?: number | null;
-	sexe?: Sexe | null;
-	mot_de_passe?: string | null;
-	objectif_principal?: string | null;
-	secteur_activite?: string | null;
-	type_contenu_prefere?: TypeContenuPrefere | null;
-	publics_cibles?: PublicsCibles | null;
+	nom?: string;
+	prenom?: string;
+	email?: string;
+	age?: number;
+	sexe?: SexeEnum;
+	mot_de_passe?: string;
+	objectif_principal?: string;
+	secteur_activite?: string;
+	type_contenu_prefere?: TypeContenuPrefereEnum;
+	publics_cibles?: PublicsCiblesEnum[];
 }
 
 // Define a type for the slice state
 export interface UserState {
 	user: User;
-	isLoggedIn: boolean;
-	role: string;
+	// session: Session;
+}
+
+export type Session = {
+	isLoggedIn: boolean,
+	access_token: string,
+	access_expiration: string,
+	refresh_token: string,
+	refresh_expiration: string
+}
+
+const userExample = {
+	nom: 'Luisenbarn',
+	prenom: 'Baragan',
+	email: 'lb@mail.com',
+	age: 20,
+	sexe: SexeEnum.Female,
+	mot_de_passe: 'LuiBarn@09',
+	objectif_principal: 'Rein de special',
+	secteur_activite: 'Informatique',
+	type_contenu_prefere: TypeContenuPrefereEnum.VIDEO,
+	publics_cibles: [
+		PublicsCiblesEnum.AGES_18_24,
+		PublicsCiblesEnum.AGES_35_54,
+		PublicsCiblesEnum.AGES_50_77
+	]
 }
 
 // Define the initial state using that type
 const initialState: UserState = {
-	user: {},
-	isLoggedIn: false,
-	role: ''
+	user: userExample,
+	// session: {
+	// 	isLoggedIn: false,
+	// 	access_token: '',
+	// 	access_expiration: '',
+	// 	refresh_token: '',
+	// 	refresh_expiration: ''
+	// }
 };
 
 export const userSlice = createSlice({
@@ -56,7 +85,7 @@ export const userSlice = createSlice({
 		setAge: (state, action: PayloadAction<number>) => {
 			state.user.age = action.payload;
 		},
-		setSexe: (state, action: PayloadAction<Sexe>) => {
+		setSexe: (state, action: PayloadAction<SexeEnum>) => {
 			state.user.sexe = action.payload;
 		},
 		setMotDePasse: (state, action: PayloadAction<string>) => {
@@ -68,18 +97,12 @@ export const userSlice = createSlice({
 		setSecteurActivite: (state, action: PayloadAction<string>) => {
 			state.user.secteur_activite = action.payload;
 		},
-		setTypeContenuPrefere: (state, action: PayloadAction<TypeContenuPrefere>) => {
+		setTypeContenuPrefere: (state, action: PayloadAction<TypeContenuPrefereEnum>) => {
 			state.user.type_contenu_prefere = action.payload;
 		},
-		setPublicsCibles: (state, action: PayloadAction<PublicsCibles>) => {
+		setPublicsCibles: (state, action: PayloadAction<PublicsCiblesEnum[]>) => {
 			state.user.publics_cibles = action.payload;
 		},
-		setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
-			state.isLoggedIn = action.payload;
-		},
-		setRole: (state, action: PayloadAction<string>) => {
-			state.role = action.payload;
-		}
 	}
 });
 
@@ -96,8 +119,6 @@ export const {
 	setSecteurActivite,
 	setTypeContenuPrefere,
 	setPublicsCibles,
-	setIsLoggedIn,
-	setRole
 } = userSlice.actions;
 
 // Export a selector for the user

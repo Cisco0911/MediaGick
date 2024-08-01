@@ -8,9 +8,14 @@ import MoovMoney from "@app/_assets/image/moovMoney-logo.png";
 import Image from "next/image";
 import {ArrowRightCircleIcon} from "@heroicons/react/24/outline";
 import RechargeWallet from "@features/ui/components/RechargeWallet";
+import {UserInfo} from "@app/_lib/parsers";
 
 
-export default function Wallet() {
+interface WalletProps {
+	user?: UserInfo
+}
+
+export default function Wallet({user}: WalletProps) {
 	return (
 		<div className={clsx(
 			"max-w-[360px] min-w-[30rem] w-full h-full rounded-3xl bg-[#0e191e]",
@@ -27,7 +32,7 @@ export default function Wallet() {
 			</div>
 
 			<div title={"Crédits disponible"}
-			     className={"w-full flex flex-col items-start px-3.5 py-5 space-y-3 rounded-3xl bg-[#0c1214]"} >
+			     className={"w-full flex flex-col items-start px-3.5 py-5 space-y-3 rounded-3xl bg-[#0c1214]"}>
 
 				<span className={"text-custom_white text-xl font-normal"}>
 						Crédits disponible
@@ -36,7 +41,7 @@ export default function Wallet() {
 				<div className={"w-full flex justify-end items-center space-x-1"}>
 					<SparklesIcon className={"size-6 fill-amber-400"}/>
 					<span className={"text-custom_white text-4xl font-bold"}>
-						250.000
+						{user?.portefeuille?.totalCredits}
 					</span>
 				</div>
 
@@ -50,7 +55,8 @@ export default function Wallet() {
 				</span>
 
 				<div className={"w-full flex space-x-5 justify-center items-center"}>
-					<div className={"relative overflow-hidden rounded-3xl bg-[#fbdb17] aspect-[138/115] w-36 h-auto object-cover"}>
+					<div
+						className={"relative overflow-hidden rounded-3xl bg-[#fbdb17] aspect-[138/115] w-36 h-auto object-cover"}>
 						<Image src={Tmoney}
 						       alt={"Tmoney"}
 						       fill
@@ -66,7 +72,7 @@ export default function Wallet() {
 					</div>
 				</div>
 
-				<RechargeWallet />
+				<RechargeWallet/>
 
 			</div>
 

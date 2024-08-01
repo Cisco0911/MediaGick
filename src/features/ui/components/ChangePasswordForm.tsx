@@ -5,6 +5,9 @@ import InputFieldDefault from "@features/ui/components/InputFieldDefault";
 import {useState} from "react";
 import Button from "@features/ui/components/Button";
 import MyPopover from "@features/ui/components/MyPopover";
+import {z} from "zod";
+import toast from "react-hot-toast";
+import {changePwd} from "@app/_lib/actions/auth";
 
 
 export default function ChangePasswordForm() {
@@ -26,13 +29,49 @@ export default function ChangePasswordForm() {
 
 	const [isOpen, setIsOpen] = useState(false)
 
+	const [pending, setPending] = useState(false)
 
+	const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault()
+
+		let toastId = ""
+
+		try {
+			if (!pwdValidityFuncs.oldPassword(pwdForm.oldPassword) ||
+				!pwdValidityFuncs.newPassword(pwdForm.newPassword) ||
+				pwdForm.newPassword !== pwdForm.confirmPassword) {
+
+				toast.error("Mot de passe invalide");
+
+				return;
+			}
+
+			setPending(true);
+			// toastId = toast.loading('Opération en cours...');
+
+			const ok = await changePwd(pwdForm.oldPassword, pwdForm.newPassword);
+
+			if (ok){
+				toast.dismiss(toastId);
+				toast.success("Opération reussie");
+
+				setIsOpen(false);
+			}
+		}
+		catch (err) {
+			toast.dismiss(toastId);
+			toast.error(`${err}`);
+		}
+		finally {
+			setPending(false);
+		}
+	}
 
 
 	return (
 		<MyPopover placement={"left-start"}
 		           offset={-100}
-		           backdrop={"blur"}
+		           // backdrop={"blur"}
 		           isOpen={isOpen}
 		           onToggle={() => setIsOpen(!isOpen)}
 		>
@@ -98,6 +137,7 @@ export default function ChangePasswordForm() {
 					<div className={"w-full"}>
 						<Button className={"w-full px-2 py-2 rounded-xl bg-custom_white text-lg font-semibold"}
 						        variant={"secondary"}
+						        onClick={submit}
 						>
 							Valider
 						</Button>

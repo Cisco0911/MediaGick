@@ -5,29 +5,69 @@ import InputFieldDefault from '@features/ui/components/InputFieldDefault'
 import Button from "@features/ui/components/Button";
 import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "@app/_lib/hooks/redux-custom-hooks";
-import {selectUser, setEmail, setMotDePasse} from "@features/user/userSlice";
+import {
+	selectUser,
+	Session,
+	setEmail,
+	setMotDePasse,
+	setUser,
+	User,
+	UserState
+} from "@features/user/userSlice";
 import {AtSymbolIcon} from "@heroicons/react/24/outline";
 import {LockClosedIcon} from "@heroicons/react/24/solid";
 import clsx from "clsx";
+import {emailValidityFn, passwordValidityFn} from "@app/_lib/inputsValidityFns";
+import {login} from "@app/_lib/actions/auth";
+import {useRouter} from "next/navigation";
+import toast from "react-hot-toast";
+
+
+
 
 const Login: React.FC = () => {
 
 	const user = useAppSelector(selectUser);
 	const dispatch = useAppDispatch();
 
-	const loginValidityFn = {
-		email: (email: string) => {
-			return email.length > 0
-		},
-		password: (password: string) => {
-			return password.length > 0
-		}
-	}
+	const router = useRouter()
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// Handle login logic
+
+		let toastId = ""
+
+		try {
+			if (!emailValidityFn(user.email) || !passwordValidityFn(user.mot_de_passe)) {
+
+				toast.error("Email ou mot de passe invalide");
+
+				return;
+			}
+
+			setPending(true);
+			toastId = toast.loading('Connexion...');
+
+			const ok = await login(user.email!, user.mot_de_passe!);
+
+			if (ok){
+				toast.dismiss(toastId);
+				toast.success("Connexion reussie");
+
+				router.push("/dashboard")
+			}
+		}
+		catch (err) {
+			toast.dismiss(toastId);
+			toast.error(`${err}`);
+		}
+		finally {
+			setPending(false);
+		}
+
 	};
+
+	const [pending, setPending] = React.useState(false);
 
 	return (
 		<div className={clsx(
@@ -50,7 +90,7 @@ const Login: React.FC = () => {
 							iconClassName={"stroke-custom_white"}
 							value={user.email || ''}
 							onChange={(e) => dispatch(setEmail(e.target.value))}
-							isValid={loginValidityFn.email}
+							isValid={emailValidityFn}
 							placeholder="Email"
 							className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
 						/>
@@ -62,7 +102,7 @@ const Login: React.FC = () => {
 							iconClassName={"fill-custom_white"}
 							value={user.mot_de_passe || ''}
 							onChange={(e) => dispatch(setMotDePasse(e.target.value))}
-							isValid={loginValidityFn.password}
+							isValid={passwordValidityFn}
 							placeholder="Password"
 							className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
 						/>
@@ -71,8 +111,10 @@ const Login: React.FC = () => {
 				</form>
 			</div>
 
-			<Button className={"w-full px-2 py-1.5 rounded-xl text-md font-normal"}
+			<Button aria-disabled={pending} className={"w-full px-2 py-1.5 rounded-xl text-md font-normal"}
 			        variant={"primary"}
+			        type={"submit"}
+			        onClick={handleSubmit}
 			>
 				Valider
 			</Button>

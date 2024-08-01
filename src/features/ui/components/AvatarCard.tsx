@@ -42,7 +42,7 @@ const AvatarCard = ({children, label, isActive, activeColor, rotate, className}:
 
 	return(
 		<motion.div className={clsx(
-			"md:size-56 sm:size-44 size-28 md:rounded-3xl sm:rounded-2xl rounded-xl bg-secondary flex flex-col justify-end items-center",
+			"lg:size-56 md:size-44 size-28 md:rounded-3xl sm:rounded-2xl rounded-xl bg-secondary flex flex-col justify-end items-center",
 			className)}
 		     onMouseEnter={() => setState("hover")}
 		     onMouseLeave={() => setState("initial")}

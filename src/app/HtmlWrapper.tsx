@@ -14,7 +14,7 @@ export default function HtmlWrapper({ children } : Props) {
 	const fontSize = useResponsiveFontSize(18, 1000);
 
 	return (
-		<html lang="en" style={{ fontSize: `${fontSize}px` }}>
+		<html lang="en" >
 		{children}
 		</html>
 	);

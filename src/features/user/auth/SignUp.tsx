@@ -1,34 +1,38 @@
 'use client'
 
 
-import {ArrowRightCircleIcon} from "@heroicons/react/16/solid";
-import {ArrowLeftCircleIcon} from "@heroicons/react/16/solid";
+import {ArrowLeftCircleIcon, ArrowRightCircleIcon} from "@heroicons/react/16/solid";
 import InputFieldSignUp from "@features/ui/components/InputFieldSignUp";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
 import {
-	PublicsCibles, selectUser,
+	selectUser,
 	setAge,
 	setEmail,
 	setMotDePasse,
 	setNom,
 	setObjectifPrincipal,
-	setPrenom, setPublicsCibles,
-	setSecteurActivite, setSexe, setTypeContenuPrefere, Sexe, TypeContenuPrefere,
-	User
+	setPrenom,
+	setPublicsCibles,
+	setSecteurActivite,
+	setSexe,
+	setTypeContenuPrefere, setUser, setUserSession
 } from "@features/user/userSlice";
-import React, {useState} from "react";
-import{Transition} from "@headlessui/react";
+import React from "react";
 import {useBoundedValue} from "@app/_lib/function_lib";
 import {useAppDispatch, useAppSelector} from "@app/_lib/hooks/redux-custom-hooks";
 import clsx from "clsx";
 import SignUpSlider from "@features/ui/components/SignUpSlider";
-import {motion, AnimatePresence} from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 import SexeSelectSignUp from "@features/ui/components/SexeSelectSignUp";
 import ContentSelectSignUp from "@features/ui/components/ContentSelectSignUp";
 import AgeRangeSelectSignUp from "@features/ui/components/AgeRangeSelectionSignUp";
 import {useSwipeable} from "react-swipeable";
 import userFields, {validateUser} from "@app/_lib/signUpFields";
+import {SexeEnum} from "@app/_lib/enums";
+import toast from "react-hot-toast";
+import {login, signUp} from "@app/_lib/actions/auth";
+import {parseToUser} from "@app/_lib/parsers";
+import {useRouter} from "next/navigation";
 
 
 // const userFields: { [key: number]: { id: keyof User; label: string } } = {
@@ -65,22 +69,60 @@ export default function SignUp() {
 	const user = useAppSelector(selectUser)
 	const dispatch = useAppDispatch()
 
+	const router = useRouter()
+
 	const swipeHandlers = useSwipeable({
 		onSwipedLeft: () => incrementField(),
 		onSwipedRight: () => decrementField(),
 	});
 
-	const submit = (e: React.MouseEvent<HTMLButtonElement>) => {
+	const [pending, setPending] = React.useState(false);
 
-		e.preventDefault()
+	const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
-		const invalidFieldIndex = validateUser(user);
+		let toastId: string = "";
 
-		if (invalidFieldIndex !== null) {
-			console.log(`Le champ avec l'index ${invalidFieldIndex} est invalide.`);
-			setField(invalidFieldIndex);
-		} else {
-			console.log("Tous les champs sont valides.");
+		try {
+
+			e.preventDefault()
+
+			const invalidFieldIndex = validateUser(user);
+
+			if (invalidFieldIndex !== null) {
+				console.log(`Le champ avec l'index ${invalidFieldIndex} est invalide.`);
+				setField(invalidFieldIndex);
+
+				return;
+			} else {
+				console.log("Tous les champs sont valides.");
+			}
+
+			setPending(true);
+			toastId = toast.loading('Inscription...');
+
+			const res = await signUp(
+				{
+					...user,
+					publics_cibles: user.publics_cibles!.map((publics_cible) => ({ libelle: publics_cible })),
+				}
+			);
+
+			const newUser  = parseToUser(res);
+
+			console.log(newUser)
+
+			dispatch(setUser(newUser));
+
+
+			toast.dismiss(toastId);
+			toast.success("Inscription reussie");
+
+			router.push("/login")
+		}
+		catch (err) {
+			console.log(err);
+			toast.dismiss(toastId);
+			toast.error(`${err}`);
 		}
 	}
 
@@ -228,14 +270,15 @@ export default function SignUp() {
 						</SignUpSlider>
 
 						<SignUpSlider show={selectedField == 9}>
-							<AgeRangeSelectSignUp value={user.publics_cibles} isMale={!Boolean(user.sexe == "F")}
+							<AgeRangeSelectSignUp value={user.publics_cibles} isMale={!Boolean(user.sexe == SexeEnum.Male)}
 							                      onChange={(value) => dispatch(setPublicsCibles(value))}/>
 						</SignUpSlider>
 
 						<SignUpSlider show={selectedField == 10}>
-							<button className={clsx(
-								"w-fit h-fit px-10 py-5 text-gray-300 font-bold text-4xl text-center sm:text-6xl lg:text-8xl rounded-3xl bg-secondary focus:outline-none focus:ring-1 focus:ring-primary"
-							)}
+							<button aria-disabled={pending}
+							        className={clsx(
+								        "w-fit h-fit px-10 py-5 text-gray-300 font-bold text-4xl text-center sm:text-6xl lg:text-8xl rounded-3xl bg-secondary focus:outline-none focus:ring-1 focus:ring-primary"
+							        )}
 							        onClick={submit}
 							>
 								VALIDER
@@ -282,87 +325,5 @@ export default function SignUp() {
 }
 
 
-// <Carousel
-// 	showArrows={false}
-// 	showIndicators={false}
-// 	showStatus={false}
-// 	showThumbs={false}
-// 	autoPlay={false}
-// 	selectedItem={selectedField}
-// >
-//
-// 	<div>
-// 		<InputFieldSignUp id={"nom-signUp"} type={"text"} value={user.nom || ""}
-// 		                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-// 			                  e.preventDefault();
-// 			                  dispatch(setNom(e.target.value))
-// 		                  }}/>
-// 	</div>
-//
-// 	<div>
-// 		<InputFieldSignUp id={"prenom-signUp"} type={"text"} value={user.prenom || ""}
-// 		                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-// 			                  e.preventDefault();
-// 			                  dispatch(setPrenom(e.target.value))
-// 		                  }}/>
-// 	</div>
-//
-// 	<div>
-// 		<InputFieldSignUp id={"email-signUp"} type={"email"} value={user.email || ""}
-// 		                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-// 			                  e.preventDefault();
-// 			                  dispatch(setEmail(e.target.value))
-// 		                  }}/>
-// 	</div>
-//
-// 	<div>
-// 		<InputFieldSignUp id={"age-signUp"} type={"number"} value={`${user.age}` || ""}
-// 		                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-// 			                  e.preventDefault();
-// 			                  dispatch(setAge(Number(e.target.value)))
-// 		                  }}/>
-// 	</div>
-//
-// 	{/*Sexe*/}
-// 	<div> </div>
-//
-// 	<div>
-// 		<InputFieldSignUp id={"mdp-signUp"} type={"password"} value={user.mot_de_passe || ""}
-// 		                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-// 			                  e.preventDefault();
-// 			                  dispatch(setMotDePasse(e.target.value))
-// 		                  }}/>
-// 	</div>
-//
-// 	<Transition show={selectedField === 6}>
-// 		<div>
-// 			<div className={"m-0.5"}>
-//
-// 										<textarea id={"objectif_principal-signUp"}
-// 										          className={clsx(
-// 											          "max-w-[600px] w-full min-h-[120px] p-4 text-gray-300 text-xl sm:text-2xl rounded-3xl bg-secondary focus:outline-none focus:ring-1 focus:ring-primary"
-// 										          )}
-// 										          rows={3}
-// 										          maxLength={91}
-// 										          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-// 											          e.preventDefault();
-// 											          dispatch(setObjectifPrincipal(e.target.value))
-// 										          }}
-// 										/>
-//
-// 			</div>
-// 		</div>
-// 	</Transition>
-//
-// 	<div>
-// 		<InputFieldSignUp id={"secteur_activite-signUp"} type={"text"}
-// 		                  value={user.secteur_activite || ""}
-// 		                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-// 			                  e.preventDefault();
-// 			                  dispatch(setSecteurActivite(e.target.value))
-// 		                  }}/>
-// 	</div>
-//
-// </Carousel>
 
 

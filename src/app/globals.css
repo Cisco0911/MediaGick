@@ -6,7 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-    /*font-size: 4px;*/
+    font-size: 1.9vh;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -108,6 +108,15 @@ input[type="number"]::-webkit-outer-spin-button {
 .items-safe-center{
     align-items: safe center;
 }
+
+
+.avatar-card{
+    @media (min-width: 73rem) {
+        width: 11rem /* 176px */;
+        height: 11rem /* 176px */;
+    }
+}
+
 
 @layer utilities {
   .text-balance {

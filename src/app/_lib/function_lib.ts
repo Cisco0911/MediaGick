@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import {useState} from 'react';
 
 
 /**
@@ -93,3 +92,4 @@ export function toggleValueInList<T>(list: T[], value: T, comparer?: (a: T, b: T
 		// If the value is not found, use the spread operator and array concatenation to add the value to the end of the list.
 		: [...list, value];
 }
+

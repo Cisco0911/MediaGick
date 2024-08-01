@@ -4,6 +4,11 @@ import Link from "next/link";
 import clsx from "clsx";
 import NavBarItemLayout from "@features/ui/components/NavBarItemLayout";
 import {ArrowLeftStartOnRectangleIcon} from "@heroicons/react/24/outline";
+import React from "react";
+import {login, logout} from "@app/_lib/actions/auth";
+import {emailValidityFn, passwordValidityFn} from "@app/_lib/inputsValidityFns";
+import toast from "react-hot-toast";
+import {useRouter} from "next/navigation";
 
 
 export default function LogoutButton() {
@@ -24,9 +29,40 @@ export default function LogoutButton() {
 		},
 	}
 
+	const router = useRouter()
+	const [pending, setPending] = React.useState(false);
+
+	const onClick = async (e: React.MouseEvent<HTMLInputElement>) => {
+		e.preventDefault()
+
+		let toastId = ""
+
+		try {
+
+			setPending(true);
+			// toastId = toast.loading('Deconnexion...');
+
+			const ok = await logout();
+
+			if (ok){
+				toast.dismiss(toastId);
+				toast.success("Deconnexion reussie");
+
+				// router.push("/login")
+			}
+		}
+		catch (err) {
+			toast.dismiss(toastId);
+			toast.error(`${err}`);
+		}
+		finally {
+			setPending(false);
+		}
+	}
 
 	return(
 		<motion.div
+			aria-disabled={pending}
 			className={clsx(
 				"group py-2.5 rounded-xl relative cursor-pointer",
 			)}
@@ -34,7 +70,7 @@ export default function LogoutButton() {
 			initial={"initial"}
 			whileHover={"hover"}
 			whileTap={"tap"}
-
+			onClick={onClick}
 		>
 			<motion.div className={"nav-logout-background"}
 			            variants={backgroundVariants}

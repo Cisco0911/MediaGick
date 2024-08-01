@@ -1,4 +1,5 @@
-import {PublicsCibles, Sexe, TypeContenuPrefere, User} from "@features/user/userSlice";
+import {PublicsCiblesEnum, SexeEnum, TypeContenuPrefereEnum} from "@app/_lib/enums";
+import {User} from "@features/user/userSlice";
 
 
 const userFields: {
@@ -36,7 +37,7 @@ const userFields: {
 	4: {
 		id: "sexe",
 		label: "Sexe",
-		isValid: (value: Sexe | null | undefined) => value !== null && value !== undefined,
+		isValid: (value: SexeEnum | null | undefined) => value !== null && value !== undefined,
 		conditions: ["Le champ ne doit pas être vide."],
 	},
 	5: {
@@ -77,13 +78,13 @@ const userFields: {
 	8: {
 		id: "type_contenu_prefere",
 		label: "Quel type de contenu vous inspire le plus ? Images ou vidéos ?",
-		isValid: (value: TypeContenuPrefere | null | undefined) => value !== null && value !== undefined,
+		isValid: (value: TypeContenuPrefereEnum | null | undefined) => value !== null && value !== undefined,
 		conditions: ["Le champ ne doit pas être vide."],
 	},
 	9: {
 		id: "publics_cibles",
 		label: "Publics cibles",
-		isValid: (value: PublicsCibles | null | undefined) => value !== null && value !== undefined && value.length > 0,
+		isValid: (value: PublicsCiblesEnum[] | null | undefined) => value !== null && value !== undefined && value.length > 0,
 		conditions: ["Le champ ne doit pas être vide.", "Le champ doit contenir au moins un public cible."],
 	},
 };
