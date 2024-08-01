@@ -120,7 +120,7 @@ export const signUp = action(async (user: signUpSchema)=> {
 
 	if (!res.ok) {
 		// console.log(JSON.stringify(content))
-		throw new Error(`${JSON.stringify(content.detail)}`)
+		throw new ClientError(`${JSON.stringify(content.detail)}`)
 	}
 
 	return ""
@@ -246,7 +246,7 @@ export const changePwd = action(async (oldPwd: string, newPwd: string) => {
 
 	if (!res.ok) {
 		console.log(JSON.stringify(content))
-		throw new Error(`${content.detail}`)
+		throw new ClientError(`${content.detail}`)
 	}
 
 	await logout()
