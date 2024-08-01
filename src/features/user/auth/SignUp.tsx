@@ -15,7 +15,7 @@ import {
 	setPublicsCibles,
 	setSecteurActivite,
 	setSexe,
-	setTypeContenuPrefere, setUser, setUserSession
+	setTypeContenuPrefere, setUser
 } from "@features/user/userSlice";
 import React from "react";
 import {useBoundedValue} from "@app/_lib/function_lib";
