@@ -79,7 +79,6 @@ export default function RechargeWallet() {
 						                   name={"accountNumberRechargeWallet"}
 						                   value={rechargeWalletForm.accountNumberRechargeWallet}
 						                   onChange={handleChange}
-						                   isValid={rechargeWalletValidityFuncs.accountNumberRechargeWallet}
 						                   placeholder={"Numéro de compte"}
 						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
 						/>
@@ -91,7 +90,6 @@ export default function RechargeWallet() {
 						                   name={"amountRechargeWallet"}
 						                   value={`${rechargeWalletForm.amountRechargeWallet}`}
 						                   onChange={handleChange}
-						                   isValid={rechargeWalletValidityFuncs.amountRechargeWallet}
 						                   placeholder={"Montant"}
 						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
 						/>
@@ -103,7 +101,6 @@ export default function RechargeWallet() {
 						                   name={"secretRechargeWallet"}
 						                   value={rechargeWalletForm.secretRechargeWallet}
 						                   onChange={handleChange}
-						                   isValid={rechargeWalletValidityFuncs.secretRechargeWallet}
 						                   placeholder={"Code secret"}
 						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
 						/>
@@ -115,7 +112,6 @@ export default function RechargeWallet() {
 						                   name={"secretConfirmRechargeWallet"}
 						                   value={rechargeWalletForm.secretConfirmRechargeWallet}
 						                   onChange={handleChange}
-						                   isValid={rechargeWalletValidityFuncs.secretConfirmRechargeWallet}
 						                   placeholder={"Confirmation"}
 						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
 						/>
