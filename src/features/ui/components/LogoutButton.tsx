@@ -1,6 +1,4 @@
-import {AnimatePresence, motion, Variants} from "framer-motion";
-import {CUSTOM_WHITE} from "@features/ui/theme";
-import Link from "next/link";
+import {motion, Variants} from "framer-motion";
 import clsx from "clsx";
 import NavBarItemLayout from "@features/ui/components/NavBarItemLayout";
 import {ArrowLeftStartOnRectangleIcon} from "@heroicons/react/24/outline";

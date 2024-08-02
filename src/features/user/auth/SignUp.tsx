@@ -15,7 +15,7 @@ import {
 	setPublicsCibles,
 	setSecteurActivite,
 	setSexe,
-	setTypeContenuPrefere, setUser
+	setTypeContenuPrefere,
 } from "@features/user/userSlice";
 import React from "react";
 import {useBoundedValue} from "@app/_lib/function_lib";
@@ -27,13 +27,12 @@ import SexeSelectSignUp from "@features/ui/components/SexeSelectSignUp";
 import ContentSelectSignUp from "@features/ui/components/ContentSelectSignUp";
 import AgeRangeSelectSignUp from "@features/ui/components/AgeRangeSelectionSignUp";
 import {useSwipeable} from "react-swipeable";
-import userFields, {validateUser} from "@app/_lib/signUpFields";
+import userFields from "@app/_lib/signUpFields";
 import {SexeEnum} from "@app/_lib/enums";
 import toast from "react-hot-toast";
-import {login, signUp} from "@app/_lib/actions/auth";
-import {parseToUser} from "@app/_lib/parsers";
+import {signUp} from "@app/_lib/actions/auth";
 import {useRouter} from "next/navigation";
-import {z, ZodFormattedError} from "zod";
+import {z} from "zod";
 import {
 	emailSchema,
 	passwordSchema,

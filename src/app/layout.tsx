@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import Background from "@features/ui/components/Background";
-import HtmlWrapper from "@app/HtmlWrapper";
 import {Providers} from "@app/Providers";
 import React from "react";
 import {Toaster} from "react-hot-toast";

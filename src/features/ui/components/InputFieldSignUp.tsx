@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import {EyeIcon, EyeSlashIcon} from "@heroicons/react/24/solid";
-import { z, ZodType } from "zod";
+import { ZodType } from "zod";
 import {AnimatePresence, motion} from "framer-motion";
 
 
@@ -20,7 +20,7 @@ const InputFieldSignUp: React.FC<InputFieldProps> = ({ id, type, value, onChange
 
 	const result = schema?.safeParse(value);
 
-	let error = null;
+	let error;
 
 	if (result?.success === false) {
 		error = result.error.issues[0].message;

@@ -3,7 +3,7 @@
 import React, {ComponentProps, ReactNode} from 'react';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import {CircularProgress} from "@nextui-org/progress";;
+import {CircularProgress} from "@nextui-org/progress";
 
 export type ButtonState = "active" | "inactive" | "busy";
 

@@ -2,7 +2,6 @@
 
 
 
-import {User} from "@features/user/userSlice";
 import {PublicsCiblesEnum, SexeEnum, TypeContenuPrefereEnum} from "../enums";
 import {parseToUserSession, UserInfo} from "@app/_lib/parsers";
 import {cookies} from "next/headers";

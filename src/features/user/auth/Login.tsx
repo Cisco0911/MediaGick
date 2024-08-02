@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import InputFieldDefault from '@features/ui/components/InputFieldDefault'
 import Button, {ButtonState} from "@features/ui/components/Button";
 import Link from "next/link";
@@ -9,9 +9,6 @@ import {
 	selectUser,
 	setEmail,
 	setMotDePasse,
-	setUser,
-	User,
-	UserState
 } from "@features/user/userSlice";
 import {AtSymbolIcon} from "@heroicons/react/24/outline";
 import {LockClosedIcon} from "@heroicons/react/24/solid";

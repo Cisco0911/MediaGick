@@ -2,7 +2,7 @@
 
 import React from 'react';
 import clsx from "clsx";
-import {ZodAny, ZodType} from "zod";
+import {ZodType} from "zod";
 import {AnimatePresence, motion} from "framer-motion";
 
 type InputFieldProps = {
@@ -33,7 +33,7 @@ const InputField: React.FC<InputFieldProps> = ({
 
 	const result = schema?.safeParse(value);
 
-	let error = null;
+	let error;
 
 	if (result?.success === false) {
 		error = result.error.issues[0].message;

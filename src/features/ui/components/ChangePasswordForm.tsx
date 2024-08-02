@@ -1,5 +1,3 @@
-import {Popover, PopoverContent, PopoverTrigger} from "@nextui-org/popover";
-import {motion} from "framer-motion";
 import {XMarkIcon} from "@heroicons/react/24/outline";
 import InputFieldDefault from "@features/ui/components/InputFieldDefault";
 import React, {useState} from "react";
@@ -7,7 +5,7 @@ import Button, {ButtonState} from "@features/ui/components/Button";
 import MyPopover from "@features/ui/components/MyPopover";
 import toast from "react-hot-toast";
 import {changePwd} from "@app/_lib/actions/auth";
-import {emailSchema, passwordSchema} from "@app/_lib/schemas";
+import {passwordSchema} from "@app/_lib/schemas";
 import {z} from "zod";
 import {CircularProgress} from "@nextui-org/progress";
 
