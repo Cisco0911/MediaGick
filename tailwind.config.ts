@@ -40,28 +40,28 @@ const config: Config = {
 		//     '2xl': '1536px',
 		//     // => @media (min-width: 1536px) { ... }
 	    // }
-	    // screens: {
-		//     'xs': '33rem',
-		//     // => @media (min-width: 475px) { ... }
-	    //
-		//     'sm': '45rem',
-		//     // => @media (min-width: 640px) { ... }
-	    //
-		//     'md': '102.6vh',
-		//     // => @media (min-width: 768px) { ... }
-	    //
-		//     'lg': '138.7vh',
-		//     // => @media (min-width: 1024px) { ... }
-	    //
-		//     'xl': '91rem',
-		//     // => @media (min-width: 1280px) { ... }
-	    //
-		//     '2xl': '109',
-		//     // => @media (min-width: 1536px) { ... }
-	    //
-		//     '3xl': '128',
-		//     // => @media (min-width: 1792px) { ... }
-	    // }
+	    screens: {
+		    'xs': '47,5vh',
+		    // => @media (min-width: 475px) { ... }
+
+		    'sm': '64vh',
+		    // => @media (min-width: 640px) { ... }
+
+		    'md': '76.8vh',
+		    // => @media (min-width: 768px) { ... }
+
+		    'lg': '102.4vh',
+		    // => @media (min-width: 1024px) { ... }
+
+		    'xl': '128vh',
+		    // => @media (min-width: 1280px) { ... }
+
+		    '2xl': '153.6vh',
+		    // => @media (min-width: 1536px) { ... }
+
+		    '3xl': '179.2vh',
+		    // => @media (min-width: 1792px) { ... }
+	    }
     },
   },
 	darkMode: "class",

@@ -81,7 +81,9 @@ export const login = action(async (email: string, password: string) => {
 		path: '/',
 	})
 
-	return ""
+	redirect("/dashboard")
+
+	return;
 
 })
 
@@ -120,8 +122,10 @@ export const signUp = action(async (user: signUpSchema)=> {
 
 	if (!res.ok) {
 		// console.log(JSON.stringify(content))
-		throw new ClientError(`${JSON.stringify(content.detail)}`)
+		throw new ClientError(`${content.detail}`)
 	}
+
+	redirect("/login")
 
 	return ""
 
@@ -251,7 +255,7 @@ export const changePwd = action(async (oldPwd: string, newPwd: string) => {
 
 	await logout()
 
-	return ""
+	return;
 
 })
 

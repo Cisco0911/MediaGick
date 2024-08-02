@@ -25,15 +25,6 @@ export interface User {
 // Define a type for the slice state
 export interface UserState {
 	user: User;
-	// session: Session;
-}
-
-export type Session = {
-	isLoggedIn: boolean,
-	access_token: string,
-	access_expiration: string,
-	refresh_token: string,
-	refresh_expiration: string
 }
 
 const userExample = {
@@ -56,13 +47,6 @@ const userExample = {
 // Define the initial state using that type
 const initialState: UserState = {
 	user: userExample,
-	// session: {
-	// 	isLoggedIn: false,
-	// 	access_token: '',
-	// 	access_expiration: '',
-	// 	refresh_token: '',
-	// 	refresh_expiration: ''
-	// }
 };
 
 export const userSlice = createSlice({

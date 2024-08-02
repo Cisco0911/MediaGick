@@ -1,13 +1,12 @@
 'use client'
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import InputFieldDefault from '@features/ui/components/InputFieldDefault'
-import Button from "@features/ui/components/Button";
+import Button, {ButtonState} from "@features/ui/components/Button";
 import Link from "next/link";
 import {useAppDispatch, useAppSelector} from "@app/_lib/hooks/redux-custom-hooks";
 import {
 	selectUser,
-	Session,
 	setEmail,
 	setMotDePasse,
 	setUser,
@@ -17,10 +16,12 @@ import {
 import {AtSymbolIcon} from "@heroicons/react/24/outline";
 import {LockClosedIcon} from "@heroicons/react/24/solid";
 import clsx from "clsx";
-import {emailValidityFn, passwordValidityFn} from "@app/_lib/inputsValidityFns";
 import {login} from "@app/_lib/actions/auth";
 import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
+import {emailSchema, passwordSchema} from "@app/_lib/schemas";
+import {CircularProgress} from "@nextui-org/progress";
+import {z} from "zod";
 
 
 
@@ -38,39 +39,49 @@ const Login: React.FC = () => {
 		// let toastId = ""
 
 		try {
-			if (!emailValidityFn(user.email) || !passwordValidityFn(user.mot_de_passe)) {
 
-				toast.error("Email ou mot de passe invalide");
-
-				return;
-			}
-
-			setPending(true);
-			const toastId = toast.loading('Connexion...');
+			setBusy(true);
 
 			const res = await login(user.email!, user.mot_de_passe!);
 
-			if (res.ok){
-				toast.dismiss(toastId);
-				toast.success("Connexion reussie");
+			if (res && !res.ok){
 
-				router.push("/dashboard")
-			}
-			else {
-				toast.dismiss(toastId);
 				toast.error(`${res.error}`);
+
+				setBusy(false);
 			}
 		}
 		catch (err) {
 			console.log(err)
-		}
-		finally {
-			setPending(false);
+			toast.error(`${err}`);
+
+			setBusy(false);
 		}
 
 	};
 
-	const [pending, setPending] = React.useState(false);
+	const formValidation = z.
+		object({
+			email: emailSchema,
+			mot_de_passe: passwordSchema,
+		});
+
+	const [isBusy, setBusy] = React.useState(false);
+
+	const submitState: ButtonState = isBusy ? "busy" : (formValidation.safeParse(user).success) ? "active" : "inactive";
+	const BusyIcon = <CircularProgress classNames={{
+		svg: "h-[1.5rem]",
+		indicator: "stroke-tertiary"
+	}} aria-label={"loading"} />
+
+
+	// useEffect(() => {
+	// 	if (emailSchema.safeParse(user.email).success && passwordSchema.safeParse(user.mot_de_passe).success) {
+	//
+	// 		setSubmitState("active");
+	// 	}
+	// 	else setSubmitState("inactive")
+	// }, [user.email, user.mot_de_passe]);
 
 	return (
 		<div className={clsx(
@@ -84,7 +95,7 @@ const Login: React.FC = () => {
 			<div className={"w-full"}>
 				<form onSubmit={handleSubmit}>
 
-					<div className={"space-y-1.5"}>
+					<div className={"space-y-2"}>
 						<InputFieldDefault
 							id="emailLogin"
 							type="email"
@@ -93,9 +104,9 @@ const Login: React.FC = () => {
 							iconClassName={"stroke-custom_white"}
 							value={user.email || ''}
 							onChange={(e) => dispatch(setEmail(e.target.value))}
-							isValid={emailValidityFn}
 							placeholder="Email"
 							className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
+							schema={emailSchema}
 						/>
 						<InputFieldDefault
 							id="passwordLogin"
@@ -105,19 +116,20 @@ const Login: React.FC = () => {
 							iconClassName={"fill-custom_white"}
 							value={user.mot_de_passe || ''}
 							onChange={(e) => dispatch(setMotDePasse(e.target.value))}
-							isValid={passwordValidityFn}
 							placeholder="Password"
 							className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
+							schema={passwordSchema}
 						/>
 					</div>
 
 				</form>
 			</div>
 
-			<Button aria-disabled={pending} className={"w-full px-2 py-1.5 rounded-xl text-md font-normal"}
+			<Button state={submitState} className={"w-full px-2 py-1.5 rounded-xl text-medium font-normal"}
 			        variant={"primary"}
 			        type={"submit"}
 			        onClick={handleSubmit}
+			        busyIcon={BusyIcon}
 			>
 				Valider
 			</Button>

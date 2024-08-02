@@ -1,3 +1,4 @@
+import StoreProvider from "@app/StoreProvider";
 
 
 export default function Layout({
@@ -9,10 +10,12 @@ export default function Layout({
 }) {
 	return (
 		<>
-			<div className={"w-full h-full"}>
-				{auth}
-				{children}
-			</div>
+			<StoreProvider>
+				<div className={"w-full h-full"}>
+					{auth}
+					{children}
+				</div>
+			</StoreProvider>
 		</>
 	)
 }

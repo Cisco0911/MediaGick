@@ -48,7 +48,7 @@ const AvatarCard = ({children, label, isActive, activeColor, rotate, className}:
 		     onMouseLeave={() => setState("initial")}
 		            animate={isActive ? {backgroundColor: activeColor} : {}}
 		>
-			<motion.div className={"text-center sm:text-3xl origin-top pointer-events-none"}
+			<motion.div className={"text-center md:text-3xl origin-top pointer-events-none"}
 			            animate={isActive ? "active" : state}
 			            variants={labelVariants}
 			            transition={{duration: 0.4, backgroundColor: {duration: 0.1}}}

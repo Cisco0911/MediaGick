@@ -1,25 +1,35 @@
 'use client';
 
-import React, {ComponentProps} from 'react';
+import React, {ComponentProps, ReactNode} from 'react';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
+import {CircularProgress} from "@nextui-org/progress";;
+
+export type ButtonState = "active" | "inactive" | "busy";
 
 type ButtonProps = ComponentProps<typeof motion.button> & {
-	children: React.ReactNode;
+	children: ReactNode;
 	variant?: 'primary' | 'secondary';
-};
+	state?: ButtonState;
+	busyIcon?: ReactNode; // Custom spin class
 
+}
 
 const Button: React.FC<ButtonProps> = React.forwardRef(({
 	                                       children,
-	                                       variant = 'primary',  // Default variant
+	                                       variant,  // Default variant
+	state = 'active',  // Default state
+	busyIcon,
 	                                       ...others
                                        }, ref) => {
 	const buttonClasses = clsx(
-		others.className,
+		"flex justify-center items-center",
 		'focus:outline-none focus-visible:outline-none focus-within:outline-none',
-		{"bg-custom_white text-secondary": variant === 'secondary'},
-		{"bg-primary text-tertiary": variant === 'primary'},
+		{"bg-custom_white text-secondary": state === 'active' && variant === 'secondary'},
+		{"bg-primary text-tertiary": state === 'active' && variant === 'primary'},
+		{"pointer-events-none": !variant && (state === 'inactive' || state === 'busy')},
+		{"bg-[#b6bcbc] text-secondary pointer-events-none": variant && (state === 'inactive' || state === 'busy')},
+		others.className,
 	);
 
 	return (
@@ -30,7 +40,9 @@ const Button: React.FC<ButtonProps> = React.forwardRef(({
 			{...others}
 			className={buttonClasses}
 		>
-			{children}
+			{state === 'busy' ?  (
+				busyIcon ?? <CircularProgress color="primary"/>
+			) : children}
 		</motion.button>
 	);
 });

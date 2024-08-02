@@ -33,29 +33,45 @@ import toast from "react-hot-toast";
 import {login, signUp} from "@app/_lib/actions/auth";
 import {parseToUser} from "@app/_lib/parsers";
 import {useRouter} from "next/navigation";
+import {z, ZodFormattedError} from "zod";
+import {
+	emailSchema,
+	passwordSchema,
+	nomSchema,
+	objectifPrincipalSchema,
+	prenomSchema,
+	publicsCiblesSchema,
+	secteurActiviteSchema,
+	typeContenuPrefereSchema,
+    ageSchema,
+    sexeSchema
+} from "@app/_lib/schemas";
+import Button, {ButtonState} from "@features/ui/components/Button";
+import {CircularProgress} from "@nextui-org/progress";
 
 
-// const userFields: { [key: number]: { id: keyof User; label: string } } = {
-// 	1: { id: "nom", label: "Indiquer votre Nom" },
-// 	2: { id: "prenom", label: "Indiquer votre Prénom" },
-// 	3: { id: "email", label: "Veuillez enter votre adresse mail" },
-// 	4: { id: "age", label: "Quel est votre age" },
-// 	5: { id: "sexe", label: "Choisissez votre Sexe" },
-// 	6: { id: "mot_de_passe", label: "Enter un mot de passe pour securiser votre compte" },
-// 	7: {
-// 		id: "objectif_principal",
-// 		label: "Decrivez en quelques mots votre objectif sur notre plateforme",
-// 	},
-// 	8: {
-// 		id: "secteur_activite",
-// 		label: "Quel est votre secteur d'activité ?",
-// 	},
-// 	9: {
-// 		id: "type_contenu_prefere",
-// 		label: "Images ou videos, qu'est ce qui vous inspire le plus ?",
-// 	},
-// 	10: { id: "publics_cibles", label: "Qui voulez-vous viser avec vos créations?" },
-// };
+
+
+const userSchema = z.object({
+	nom: nomSchema,
+	prenom: prenomSchema,
+	email: emailSchema,
+	age: ageSchema,
+	sexe: sexeSchema,
+	mot_de_passe: passwordSchema,
+	objectif_principal: objectifPrincipalSchema,
+	secteur_activite: secteurActiviteSchema,
+	type_contenu_prefere: typeContenuPrefereSchema,
+	publics_cibles: publicsCiblesSchema,
+});
+
+function formatKey(key: string): string {
+	// Remplacer les underscores par des espaces
+	let formatted = key.replace(/_/g, ' ');
+	// Mettre la première lettre en majuscule
+	formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+	return formatted;
+}
 
 export default function SignUp() {
 
@@ -78,27 +94,29 @@ export default function SignUp() {
 
 	const [pending, setPending] = React.useState(false);
 
+	const result = userSchema.safeParse(user)
+	const submitState: ButtonState = pending ? "busy" : (result.success) ? "active" : "inactive";
+	const BusyIcon = <CircularProgress size={"lg"} classNames={{
+		// svg: "h-[3.75rem]",
+		indicator: "stroke-tertiary"
+	}} aria-label={"loading"} />
+
+	const formattedErrors: any = result.success ? {} : result.error?.format()
+	// console.log(formattedErrors)
+	const errors = Object.keys(formattedErrors)
+		.filter(key => formattedErrors.hasOwnProperty(key) && formattedErrors[key]._errors?.length > 0)
+		.map(key => `${formatKey(key)}: ${formattedErrors[key]._errors[0]}`);
+
+	// console.log(errors)
+
 	const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
-		// let toastId: string = "";
 
 		try {
 
 			e.preventDefault()
 
-			const invalidFieldIndex = validateUser(user);
-
-			if (invalidFieldIndex !== null) {
-				console.log(`Le champ avec l'index ${invalidFieldIndex} est invalide.`);
-				setField(invalidFieldIndex);
-
-				return;
-			} else {
-				console.log("Tous les champs sont valides.");
-			}
-
 			setPending(true);
-			const toastId = toast.loading('Inscription...');
 
 			const res = await signUp(
 				{
@@ -107,26 +125,26 @@ export default function SignUp() {
 				}
 			);
 
-			if (res.ok){
-				toast.dismiss(toastId);
-				toast.success("Inscription reussie");
+			if (res && !res.ok){
 
-				router.push("/login")
-			}
-			else {
-				toast.dismiss(toastId);
 				toast.error(`${res.error}`);
-			}
 
+				setPending(false);
+			}
 
 		}
 		catch (err) {
 			console.log(err);
+			toast.error(`${err}`);
+
+			setPending(false)
 		}
 	}
 
 	return(
-		<div className={"w-full h-full relative flex flex-col justify-center items-center"}>
+		<div className={"w-full h-full relative flex flex-col justify-start sm:justify-center items-center"}
+		     {...swipeHandlers}
+		>
 
 			<div className={"w-full"}>
 
@@ -161,11 +179,9 @@ export default function SignUp() {
 					</div>
 				</div>
 
-				<div className={"flex w-full justify-between items-center"}
-				     {...swipeHandlers}
-				>
+				<div className={"flex w-full justify-between items-center"}>
 
-					<div className={"hidden sm:block md:m-24 m-16 rounded-full active:ring-1 active:ring-primary"}
+					<div className={"hidden md:block xl:m-24 lg:m-16 m-5 rounded-full active:ring-1 active:ring-primary"}
 					     onClick={e => decrementField()}
 					>
 						<ArrowLeftCircleIcon className={"size-10 fill-secondary"}/>
@@ -175,9 +191,9 @@ export default function SignUp() {
 						className={"w-full h-full p-2.5 relative flex flex-grow overflow-visible justify-center items-center text-center"}>
 
 						<SignUpSlider show={selectedField == 0}>
-							<InputFieldSignUp id={"nom-signUp"} type={"text"} value={user.nom || ""}
-							                  isValid={userFields[0].isValid}
-							                  conditions={userFields[0].conditions}
+							<InputFieldSignUp id={"nom-signUp"} type={"text"}
+							                  value={user.nom || ""}
+							                  schema={nomSchema}
 							                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 								                  e.preventDefault();
 								                  dispatch(setNom(e.target.value))
@@ -185,9 +201,9 @@ export default function SignUp() {
 						</SignUpSlider>
 
 						<SignUpSlider show={selectedField == 1}>
-							<InputFieldSignUp id={"prenom-signUp"} type={"text"} value={user.prenom || ""}
-							                  isValid={userFields[1].isValid}
-							                  conditions={userFields[1].conditions}
+							<InputFieldSignUp id={"prenom-signUp"} type={"text"}
+							                  value={user.prenom || ""}
+							                  schema={prenomSchema}
 							                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 								                  e.preventDefault();
 								                  dispatch(setPrenom(e.target.value))
@@ -195,9 +211,9 @@ export default function SignUp() {
 						</SignUpSlider>
 
 						<SignUpSlider show={selectedField == 2}>
-							<InputFieldSignUp id={"email-signUp"} type={"email"} value={user.email || ""}
-							                  isValid={userFields[2].isValid}
-							                  conditions={userFields[2].conditions}
+							<InputFieldSignUp id={"email-signUp"} type={"email"}
+							                  value={user.email || ""}
+							                  schema={emailSchema}
 							                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 								                  e.preventDefault();
 								                  dispatch(setEmail(e.target.value))
@@ -205,9 +221,9 @@ export default function SignUp() {
 						</SignUpSlider>
 
 						<SignUpSlider show={selectedField == 3}>
-							<InputFieldSignUp id={"age-signUp"} type={"number"} value={`${user.age}` || ""}
-							                  isValid={userFields[3].isValid}
-							                  conditions={userFields[3].conditions}
+							<InputFieldSignUp id={"age-signUp"} type={"number"}
+							                  value={`${user.age}` || ""}
+							                  schema={ageSchema}
 							                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 								                  e.preventDefault();
 								                  dispatch(setAge(Number(e.target.value)))
@@ -221,9 +237,9 @@ export default function SignUp() {
 						</SignUpSlider>
 
 						<SignUpSlider show={selectedField == 5}>
-							<InputFieldSignUp id={"mdp-signUp"} type={"text"} value={user.mot_de_passe || ""}
-							                  isValid={userFields[5].isValid}
-							                  conditions={userFields[5].conditions}
+							<InputFieldSignUp id={"mdp-signUp"} type={"text"}
+							                  value={user.mot_de_passe || ""}
+							                  schema={passwordSchema}
 							                  isPassword={true}
 							                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 								                  e.preventDefault();
@@ -253,8 +269,7 @@ export default function SignUp() {
 
 						<SignUpSlider show={selectedField == 7}>
 							<InputFieldSignUp id={"secteur_activite-signUp"} type={"text"}
-							                  isValid={userFields[7].isValid}
-							                  conditions={userFields[7].conditions}
+							                  schema={secteurActiviteSchema}
 							                  value={user.secteur_activite || ""}
 							                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 								                  e.preventDefault();
@@ -274,20 +289,37 @@ export default function SignUp() {
 						</SignUpSlider>
 
 						<SignUpSlider show={selectedField == 10}>
-							<button aria-disabled={pending}
-							        className={clsx(
-								        "w-fit h-fit px-10 py-5 text-gray-300 font-bold text-4xl text-center sm:text-6xl lg:text-8xl rounded-3xl bg-secondary focus:outline-none focus:ring-1 focus:ring-primary"
-							        )}
-							        onClick={submit}
-							>
-								VALIDER
-							</button>
+							<div className={"w-full flex flex-col justify-center items-center space-y-5"}>
+
+								{
+									errors.length > 0 &&
+                                    <div className={clsx(
+										"bg-tertiary px-1.5 text-medium",
+										"rounded-md border border-red-500",
+									)}>
+                                        <span className={"text-xs text-red-500"}>{errors[0]}</span>
+                                    </div>
+								}
+
+								<Button state={submitState}
+								        className={clsx(
+									        "w-fit h-fit px-10 py-5 text-gray-300 font-bold text-6xl text-center sm:text-6xl lg:text-8xl",
+									        "rounded-3xl bg-secondary focus:outline-none focus:ring-1 focus:ring-primary"
+								        )}
+								        onClick={submit}
+								        busyIcon={BusyIcon}
+								>
+									VALIDER
+								</Button>
+
+							</div>
 						</SignUpSlider>
 
 					</div>
 
-					<div className={"hidden sm:block md:m-24 m-16 rounded-full active:ring-1 active:ring-primary"}
-					     onClick={e => incrementField()}
+					<div
+						className={"hidden md:block xl:m-24 lg:m-16 m-5 rounded-full active:ring-1 active:ring-primary"}
+						onClick={e => incrementField()}
 					>
 						<ArrowRightCircleIcon className={"size-10 fill-secondary"}/>
 					</div>
@@ -295,9 +327,9 @@ export default function SignUp() {
 				</div>
 
 				<div
-					className={"sm:hidden absolute top-0 left-0 pb-24 flex-grow w-full h-full flex flex-col justify-end"}>
+					className={"md:hidden absolute top-0 left-0 pb-24 flex-grow w-full h-full flex flex-col justify-end"}>
 
-					<div className={"sm:hidden flex justify-between px-32"}>
+					<div className={"flex justify-between px-10 sm:px-32"}>
 						<div className={"rounded-full active:ring-1 active:ring-primary"}
 						     onClick={e => decrementField()}
 						>

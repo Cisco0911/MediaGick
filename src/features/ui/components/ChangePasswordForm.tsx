@@ -2,68 +2,70 @@ import {Popover, PopoverContent, PopoverTrigger} from "@nextui-org/popover";
 import {motion} from "framer-motion";
 import {XMarkIcon} from "@heroicons/react/24/outline";
 import InputFieldDefault from "@features/ui/components/InputFieldDefault";
-import {useState} from "react";
-import Button from "@features/ui/components/Button";
+import React, {useState} from "react";
+import Button, {ButtonState} from "@features/ui/components/Button";
 import MyPopover from "@features/ui/components/MyPopover";
-import {z} from "zod";
 import toast from "react-hot-toast";
 import {changePwd} from "@app/_lib/actions/auth";
+import {emailSchema, passwordSchema} from "@app/_lib/schemas";
+import {z} from "zod";
+import {CircularProgress} from "@nextui-org/progress";
 
 
 export default function ChangePasswordForm() {
 
-	const [pwdForm, setPwdForm] = useState(
+	const [changePwdForm, setChangePwdForm] = useState(
 		{oldPassword: "", newPassword: "", confirmPassword: ""}
 	)
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const {name, value} = e.target
-		setPwdForm({...pwdForm, [name]: value})
+		setChangePwdForm({...changePwdForm, [name]: value})
 	};
 
-	const pwdValidityFuncs = {
-		oldPassword: (value: string) => value.length > 0,
-		newPassword: (value: string) => value.length > 0,
-		confirmPassword: (value: string) => value === pwdForm.newPassword
-	}
+	const confirmPwdSchema = z
+		.string({ required_error: "Veuillez confirmer votre mot de passe" })
+		.refine((val) => val === changePwdForm.newPassword, {
+			message: "Tu veux tromper qui ? 😒",
+			path: ["confirmPassword"],
+		})
+
+	const formValidation = z
+		.object({
+			oldPassword: passwordSchema,
+			newPassword: passwordSchema,
+			confirmPassword: confirmPwdSchema
+		})
+
 
 	const [isOpen, setIsOpen] = useState(false)
 
 	const [pending, setPending] = useState(false)
 
+	const submitState: ButtonState = pending ? "busy" : (formValidation.safeParse(changePwdForm).success) ? "active" : "inactive";
+	const BusyIcon = <CircularProgress classNames={{
+		svg: "h-[1.75rem]",
+		indicator: "stroke-tertiary"
+	}} />
+
 	const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault()
 
-		// let toastId = ""
-
 		try {
-			if (!pwdValidityFuncs.oldPassword(pwdForm.oldPassword) ||
-				!pwdValidityFuncs.newPassword(pwdForm.newPassword) ||
-				pwdForm.newPassword !== pwdForm.confirmPassword) {
-
-				toast.error("Mot de passe invalide");
-
-				return;
-			}
 
 			setPending(true);
-			// toastId = toast.loading('Opération en cours...');
 
-			const res = await changePwd(pwdForm.oldPassword, pwdForm.newPassword);
+			const res = await changePwd(changePwdForm.oldPassword, changePwdForm.newPassword);
 
-			if (res.ok){
-				// toast.dismiss(toastId);
-				toast.success("Opération reussie");
+			if (res && !res.ok){
 
-				setIsOpen(false);
-			}
-			else {
-				// toast.dismiss(toastId);
 				toast.error(`${res.error}`);
+
 			}
 		}
 		catch (err) {
 			console.log(err)
+			toast.error(`${err}`);
 		}
 		finally {
 			setPending(false);
@@ -74,7 +76,7 @@ export default function ChangePasswordForm() {
 	return (
 		<MyPopover placement={"left-start"}
 		           offset={-100}
-		           // backdrop={"blur"}
+		           backdrop={"blur"}
 		           isOpen={isOpen}
 		           onToggle={() => setIsOpen(!isOpen)}
 		>
@@ -105,11 +107,11 @@ export default function ChangePasswordForm() {
 						<InputFieldDefault id={"OldPwdChangePwd"}
 						                   type={"text"}
 						                   name={"oldPassword"}
-						                   value={pwdForm.oldPassword}
+						                   value={changePwdForm.oldPassword}
 						                   onChange={handleChange}
-						                   isValid={pwdValidityFuncs.oldPassword}
 						                   placeholder={"Ancien mot de passe"}
 						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
+						                   schema={passwordSchema}
 						/>
 					</div>
 
@@ -117,11 +119,11 @@ export default function ChangePasswordForm() {
 						<InputFieldDefault id={"NewPwdChangePwd"}
 						                   type={"text"}
 						                   name={"newPassword"}
-						                   value={pwdForm.newPassword}
+						                   value={changePwdForm.newPassword}
 						                   onChange={handleChange}
-						                   isValid={pwdValidityFuncs.newPassword}
 						                   placeholder={"Nouveau mot de passe"}
 						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
+						                   schema={passwordSchema}
 						/>
 					</div>
 
@@ -129,11 +131,11 @@ export default function ChangePasswordForm() {
 						<InputFieldDefault id={"ConfirmPwdChangePwd"}
 						                   type={"text"}
 						                   name={"confirmPassword"}
-						                   value={pwdForm.confirmPassword}
+						                   value={changePwdForm.confirmPassword}
 						                   onChange={handleChange}
-						                   isValid={pwdValidityFuncs.confirmPassword}
 						                   placeholder={"Confirmer le mot de passe"}
 						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
+						                   schema={confirmPwdSchema}
 						/>
 					</div>
 
@@ -141,6 +143,8 @@ export default function ChangePasswordForm() {
 						<Button className={"w-full px-2 py-2 rounded-xl bg-custom_white text-lg font-semibold"}
 						        variant={"secondary"}
 						        onClick={submit}
+						        state={submitState}
+						        busyIcon={BusyIcon}
 						>
 							Valider
 						</Button>

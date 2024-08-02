@@ -29,6 +29,9 @@ export default function RootLayout({
 					<div className={"z-10 w-screen h-screen"}>
 						<Toaster
 							position={"top-right"}
+							containerStyle={{
+								zIndex: 10000000
+							}}
 						/>
 						{children}
 					</div>

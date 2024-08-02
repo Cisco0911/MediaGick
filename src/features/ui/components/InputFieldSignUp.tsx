@@ -1,8 +1,8 @@
 import React from "react";
 import clsx from "clsx";
-import {ChevronDoubleRightIcon, ExclamationTriangleIcon} from "@heroicons/react/24/outline";
-import {Popover, PopoverButton, PopoverPanel} from "@headlessui/react";
 import {EyeIcon, EyeSlashIcon} from "@heroicons/react/24/solid";
+import { z, ZodType } from "zod";
+import {AnimatePresence, motion} from "framer-motion";
 
 
 type InputFieldProps = {
@@ -10,22 +10,33 @@ type InputFieldProps = {
 	type: string;
 	value: string;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	isValid: (value: string | number) => boolean;
-	conditions: string[];
 	isPassword?: boolean;
+	schema?: ZodType<string | number>;
 };
 
-const InputFieldSignUp: React.FC<InputFieldProps> = ({ id, type, value, onChange, isValid, conditions, isPassword = false }) => {
+const InputFieldSignUp: React.FC<InputFieldProps> = ({ id, type, value, onChange, schema, isPassword = false }) => {
 
 	const [showPassword, setShowPassword] = React.useState(false);
 
+	const result = schema?.safeParse(value);
+
+	let error = null;
+
+	if (result?.success === false) {
+		error = result.error.issues[0].message;
+	}
+	else error = null;
+
 	return(
 		<div className="m-0.5 mx-10 flex justify-center">
-			<div className={"group relative"}>
+			<div className={"group relative w-full flex justify-center"}>
+
 				<input id={id} className={clsx(
 					{"password-input": isPassword},
-					"max-w-[400px] max-h-[80px] w-full h-[50px] sm:h-[80px] px-2.5 text-gray-300 text-4xl text-center sm:text-6xl rounded-3xl bg-secondary focus:outline-none focus:ring-1 focus:ring-primary",
-					{"focus:ring-red-500": !isValid(value)}
+					"xl:max-w-[75vh] w-full aspect-[390/80] px-2.5 text-gray-300 text-xl sm:text-4xl text-center xl:text-5xl rounded-3xl bg-secondary",
+					"focus:outline-none focus:ring-2 focus:ring-primary",
+					"",
+					{"focus:ring-red-500": !!error}
 				)}
 				       value={value}
 				       type={isPassword ? (showPassword ? "text" : "password") : type}
@@ -33,36 +44,6 @@ const InputFieldSignUp: React.FC<InputFieldProps> = ({ id, type, value, onChange
 				       onChange={onChange}
 				/>
 
-				<Popover>
-					<PopoverButton className={clsx(
-						"absolute -top-11 -right-0 text-red-500 rounded-full p-1 bg-secondary cursor-pointer",
-						{"hidden group-focus-within:block": !isValid(value)},
-						{"hidden": isValid(value)})}
-					>
-						<ExclamationTriangleIcon className={"size-8"} />
-					</PopoverButton>
-					<PopoverPanel
-						anchor={{ to: 'top end', gap: '4px' }}
-						className="p-3 rounded-xl bg-black/80 text-sm/6"
-					>
-						<div className={"flex flex-col space-y-2 backdrop-blur-xl"}>
-
-							{
-								conditions.map((condition, index) => {
-									return (
-										<div key={index} className="flex justify-start items-center rounded-lg py-2 px-3 bg-white/5">
-											<div className={"p-1"}>
-												<ChevronDoubleRightIcon className="size-6 font-semibold text-primary"></ChevronDoubleRightIcon>
-											</div>
-											<p className="text-white">{condition}</p>
-										</div>
-									)
-								})
-							}
-
-						</div>
-					</PopoverPanel>
-				</Popover>
 
 				<div className={clsx(
 					"absolute -bottom-11 -right-0 rounded-full p-1 bg-secondary cursor-pointer",
@@ -76,6 +57,23 @@ const InputFieldSignUp: React.FC<InputFieldProps> = ({ id, type, value, onChange
 							<EyeIcon className={"size-8 text-black"} />
 					}
 				</div>
+
+				<AnimatePresence>
+					{error &&
+                        <motion.div className={clsx(
+	                        "hidden group-focus-within:block bg-secondary px-1.5 text-medium",
+	                        "rounded-md border border-red-500 sm:border-t-0",
+	                        "absolute sm:left-[5%] top-[200%] z-10 sm:top-[98%]"
+                        )}
+
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10, transition: { opacity: { duration: 0.1 } } }}
+                        >
+                            <span className={"text-xs text-red-500"}>{error}</span>
+                        </motion.div>}
+				</AnimatePresence>
+
 			</div>
 		</div>
 	)
