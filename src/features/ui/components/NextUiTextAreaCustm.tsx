@@ -44,4 +44,6 @@ const NextUiTextAreaCustm = forwardRef<HTMLTextAreaElement, NextUiInputCustmProp
 	}
 );
 
+NextUiTextAreaCustm.displayName = "NextUiTextAreaCustm"
+
 export default NextUiTextAreaCustm;

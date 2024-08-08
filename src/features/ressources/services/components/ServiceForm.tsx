@@ -46,7 +46,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 		handleSubmit,
 		formState: { errors },
 		getValues,
-		control,
+		watch,
 	} = useForm({
 		resolver: zodResolver(AddServiceSchema),
 		defaultValues: service,
@@ -402,11 +402,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 						<span className={"text-white text-2xl font-bold"}>
 							{
 								isUpdate ? service.libelle :
-									useWatch({
-										control,
-										name: "libelle",
-										defaultValue: "_____",
-									})
+									watch("libelle", "_____")
 							}
 						</span>
 						<CheckBadgeIcon className={clsx(
@@ -421,11 +417,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 						<span className={"text-sm font-normal"}>
 							{
 								isUpdate ? service.prix :
-									useWatch({
-										control,
-										name: "prix",
-										defaultValue: 0,
-									})
+									`${watch("prix", 0)}`
 							} FCFA
 						</span>
 					</div>
@@ -437,11 +429,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 						<span className={"text-sm font-normal"}>
 							{
 								isUpdate ? service.description :
-									useWatch({
-										control,
-										name: "description",
-										defaultValue: "_____",
-									})
+									watch("description", "_____")
 							}
 						</span>
 					</div>

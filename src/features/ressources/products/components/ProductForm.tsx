@@ -41,7 +41,7 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 		handleSubmit,
 		formState: { errors },
 		getValues,
-		control,
+		watch,
 	} = useForm({
 		resolver: zodResolver(AddProductSchema),
 		defaultValues: product,
@@ -387,11 +387,7 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 						<span className={"text-white text-2xl font-bold"}>
 							{
 								isDisabled ? product.libelle :
-									useWatch({
-										control,
-										name: "libelle",
-										defaultValue: "_____",
-									})
+									watch("libelle", "_____")
 							}
 						</span>
 						<CheckBadgeIcon className={clsx(
@@ -406,11 +402,7 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 						<span className={"text-sm font-normal"}>
 							{
 								isDisabled ? product.prix :
-									useWatch({
-										control,
-										name: "prix",
-										defaultValue: 0,
-									})
+									`${watch("prix", 0)}`
 							} FCFA
 						</span>
 					</div>
@@ -422,11 +414,7 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 						<span className={"text-sm font-normal"}>
 							{
 								isDisabled ? product.description :
-									useWatch({
-										control,
-										name: "description",
-										defaultValue: "_____",
-									})
+									watch("description", "_____")
 							}
 						</span>
 					</div>

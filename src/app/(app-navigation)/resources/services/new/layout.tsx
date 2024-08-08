@@ -45,8 +45,8 @@ export default function Layout({ children, manual, assisted }: LayoutProps) {
 					<div className={"text-custom_white"}>
 						{
 							assistMode ?
-								<span> Ajout d'offre assisté </span> :
-								<span> Ajout d'offre manuel </span>
+								<span> Ajout d&apos;offre assisté </span> :
+								<span> Ajout d&apos;offre manuel </span>
 						}
 					</div>
 				</Switch>

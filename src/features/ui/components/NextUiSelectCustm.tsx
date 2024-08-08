@@ -51,4 +51,6 @@ const NextUiSelectCustm = forwardRef<HTMLSelectElement, NextUiSelectCustmProps>(
 	}
 );
 
+NextUiSelectCustm.displayName = "NextUiSelectCustm"
+
 export default NextUiSelectCustm;

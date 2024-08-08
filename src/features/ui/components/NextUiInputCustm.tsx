@@ -40,4 +40,6 @@ const NextUiInputCustm = forwardRef<HTMLInputElement, NextUiInputCustmProps>(
 	}
 );
 
+NextUiInputCustm.displayName = "NextUiInputCustm"
+
 export default NextUiInputCustm;

@@ -34,6 +34,8 @@ const CustButton = forwardRef<HTMLButtonElement, CustButtonProps>(({children, hr
 	)
 })
 
+CustButton.displayName = "CustButton"
+
 
 export default function BrowseResources() {
 

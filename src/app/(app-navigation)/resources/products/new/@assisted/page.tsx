@@ -120,14 +120,14 @@ export default function NewProductPage() {
 	))
 
 	const partenerLogos: ReactNode[] = [
-		<AnkaCard domain={hostname} />,
-		<AmazonCard domain={hostname} />,
-		<PlayStoreCard domain={hostname} />,
-		<AppStoreCard domain={hostname} />,
-		<ImmoAskCard domain={hostname} />,
-		<LinkedInCard domain={hostname} />,
-		<GoogleMapCard domain={hostname} />,
-		<VotreSiteCard domain={hostname} />,
+		<AnkaCard key={1} domain={hostname} />,
+		<AmazonCard key={2} domain={hostname} />,
+		<PlayStoreCard key={3} domain={hostname} />,
+		<AppStoreCard key={4} domain={hostname} />,
+		<ImmoAskCard key={5} domain={hostname} />,
+		<LinkedInCard key={6} domain={hostname} />,
+		<GoogleMapCard key={7} domain={hostname} />,
+		<VotreSiteCard key={8} domain={hostname} />,
 	]
 
 
