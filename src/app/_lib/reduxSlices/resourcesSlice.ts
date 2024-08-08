@@ -1,5 +1,6 @@
-import {Product, Service} from "@app/_lib/interfaces";
+import {Product} from "@app/_lib/interfaces";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {Service} from "@app/(app-navigation)/resources/services/interfaces";
 
 
 export interface ResourcesState {
