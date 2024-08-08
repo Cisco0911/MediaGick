@@ -1,7 +1,7 @@
-import AvatarCard from "@features/ui/components/AvatarCard";
+import AvatarCard from "@features/user/auth/SignUp/components/AvatarCard";
 import Image from "next/image";
-import sexeMale from "@/app/_assets/image/avatars/sexe-male.png";
-import sexeFemale from "@/app/_assets/image/avatars/sexe-female.png";
+import sexeMale from "@app/_assets/image/avatars/sexe-male.png";
+import sexeFemale from "@app/_assets/image/avatars/sexe-female.png";
 import {SexeEnum} from "@app/_lib/enums";
 
 

@@ -1,5 +1,5 @@
 import {PublicsCiblesEnum, SexeEnum, TypeContenuPrefereEnum} from "@app/_lib/enums";
-import {User} from "@features/user/userSlice";
+import {User} from "@app/_lib/reduxSlices/userSlice";
 
 
 const userFields: {

@@ -1,17 +1,16 @@
 'use client'
 
 import clsx from "clsx";
-import {BanknotesIcon, CreditCardIcon, SparklesIcon, WalletIcon} from "@heroicons/react/24/solid";
-import {motion} from "framer-motion";
+import {BanknotesIcon, SparklesIcon, WalletIcon} from "@heroicons/react/24/solid";
 import Tmoney from "@app/_assets/image/tmoney-logo.png";
 import MoovMoney from "@app/_assets/image/moovMoney-logo.png";
 import Image from "next/image";
 import {ArrowRightCircleIcon} from "@heroicons/react/24/outline";
-import RechargeWallet from "@features/ui/components/RechargeWallet";
-import {UserInfo} from "@app/_lib/parsers";
+import RechargeWallet from "@features/user/account/Wallet/components/RechargeWallet";
+import {UserInfo} from "@app/_lib/interfaces";
 
 
-interface WalletProps {
+type WalletProps = {
 	user?: UserInfo
 }
 

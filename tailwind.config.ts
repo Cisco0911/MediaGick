@@ -15,6 +15,7 @@ const config: Config = {
 	    colors: {
 		    primary: PRIMARY_COLOR,
 		    secondary: SECONDARY_COLOR,
+		    default: SECONDARY_COLOR,
 		    tertiary: TERTIARY_COLOR,
 		    fourth: FOURTH_COLOR,
 		    custom_white: CUSTOM_WHITE,
@@ -64,9 +65,11 @@ const config: Config = {
 	    }
     },
   },
-	darkMode: "class",
+	// darkMode: "class",
 	plugins: [
-	  nextui(),
+	  nextui({
+		  defaultTheme: "dark",
+	  }),
 	  // require('@tailwindcss/forms'),
   ],
 };

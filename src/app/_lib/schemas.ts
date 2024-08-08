@@ -1,5 +1,13 @@
-import {z} from "zod";
-import {PublicsCiblesEnum, SexeEnum, TypeContenuPrefereEnum} from "@app/_lib/enums";
+import {z, ZodObject} from "zod";
+import {
+	CurrencyEnum,
+	OfferNatureEnum,
+	PublicsCiblesEnum,
+	SexeEnum,
+	TypeContenuPrefereEnum,
+	TypeProductEnum
+} from "@app/_lib/enums";
+import {Product} from "@app/_lib/interfaces";
 
 
 
@@ -56,3 +64,95 @@ export const typeContenuPrefereSchema = z
 export const publicsCiblesSchema = z
 	.array(z.nativeEnum(PublicsCiblesEnum))
 	.min(1, { message: "Selectionner au moins un public cible" });
+
+export const ProductSchema = z.object({
+	libelle: z.string().min(1),
+	description: z.string().min(1),
+	telephone_marchand: z.string().min(1),
+	// prix: z.number().positive(),
+	prix: z.number(),
+	unite_prix: z.string(),
+	devise_prix: z.nativeEnum(CurrencyEnum),
+	est_disponible: z.boolean(),
+	nombre_jours_garantie: z.number().int().nonnegative(),
+	qte_disponible: z.number().int().nonnegative(),
+	nature: z.nativeEnum(OfferNatureEnum),
+	id_createur: z.number().int().nullable(),
+	logo: z.string().nullable(),
+	images_offres: z
+		.array(
+			z.object({
+				chemin: z.string().min(1),
+				id: z.number().int().positive(),
+			})
+		)
+		.nullable(),
+	type: z.coerce.number().int().positive(),
+	id: z.number().int().positive(),
+	attributs_offres: z
+		.array(
+			z.object({
+				nom: z.string().min(1),
+				valeur: z.string().min(1),
+				id: z.number().int().positive(),
+			})
+		)
+		.nullable(),
+});
+
+export const AddProductSchema = z.object({
+	libelle: z.string(),
+	description: z.string(),
+	telephone_marchand: z.string(),
+	prix: z.number(),
+	unite_prix: z.string(),
+	devise_prix: z.coerce.number(),
+	est_disponible: z.boolean().default(true),
+	nombre_jours_garantie: z.number(),
+	qte_disponible: z.number(),
+	nature: z.coerce.number(),
+	// id_createur: z.number(),
+	// logo: z.string(),
+	// images_offres: z.array(z.any()), // Adjust type as needed
+	type: z.coerce.number(),
+	attributs_offres: z
+		.array(
+			z.object({
+				nom: z.string(),
+				valeur: z.string(),
+			})
+		)
+		.nullable(),
+});
+export const AutoAddProductSchema = z.object({
+	libelle: z.string().min(1),
+	telephone_marchand: z.string().min(1),
+	// id_createur: z.number(),
+	// logo: z.string(),
+	type_offre: z.coerce.number().positive(),
+	url: z.string().min(1),
+});
+
+
+export const UpdateProductSchema = z.object({
+	libelle: z.string(),
+	description: z.string(),
+	telephone_marchand: z.string(),
+	prix: z.number(),
+	unite_prix: z.string(),
+	devise_prix: z.coerce.number(),
+	est_disponible: z.boolean().default(true),
+	nombre_jours_garantie: z.number(),
+	qte_disponible: z.number(),
+	attributs_offres: z
+		.array(
+			z.object({
+				nom: z.string(),
+				valeur: z.string(),
+			})
+		)
+		.nullable(),
+});
+
+
+

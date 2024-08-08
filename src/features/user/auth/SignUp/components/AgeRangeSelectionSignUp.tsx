@@ -1,15 +1,15 @@
-import AvatarCard from "@features/ui/components/AvatarCard";
+import AvatarCard from "@features/user/auth/SignUp/components/AvatarCard";
 import Image from "next/image";
-import maleUnder18 from "@/app/_assets/image/avatars/male-age-range/under-18.png";
-import male18_24 from "@/app/_assets/image/avatars/male-age-range/18-24.png";
-import male25_34 from "@/app/_assets/image/avatars/male-age-range/25-34.png";
-import male35_54 from "@/app/_assets/image/avatars/male-age-range/35-54.png";
-import male50_77 from "@/app/_assets/image/avatars/male-age-range/50-77.png";
-import femaleUnder18 from "@/app/_assets/image/avatars/female-age-range/under-18.png";
-import female18_24 from "@/app/_assets/image/avatars/female-age-range/18-24.png";
-import female25_34 from "@/app/_assets/image/avatars/female-age-range/25-34.png";
-import female35_54 from "@/app/_assets/image/avatars/female-age-range/35-54.png";
-import female50_77 from "@/app/_assets/image/avatars/female-age-range/50-77.png";
+import maleUnder18 from "@app/_assets/image/avatars/male-age-range/under-18.png";
+import male18_24 from "@app/_assets/image/avatars/male-age-range/18-24.png";
+import male25_34 from "@app/_assets/image/avatars/male-age-range/25-34.png";
+import male35_54 from "@app/_assets/image/avatars/male-age-range/35-54.png";
+import male50_77 from "@app/_assets/image/avatars/male-age-range/50-77.png";
+import femaleUnder18 from "@app/_assets/image/avatars/female-age-range/under-18.png";
+import female18_24 from "@app/_assets/image/avatars/female-age-range/18-24.png";
+import female25_34 from "@app/_assets/image/avatars/female-age-range/25-34.png";
+import female35_54 from "@app/_assets/image/avatars/female-age-range/35-54.png";
+import female50_77 from "@app/_assets/image/avatars/female-age-range/50-77.png";
 import {PublicsCiblesEnum, SexeEnum} from "@app/_lib/enums";
 import {toggleValueInList} from "@app/_lib/function_lib";
 

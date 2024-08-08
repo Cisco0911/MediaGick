@@ -2,7 +2,7 @@
 
 
 import {ArrowLeftCircleIcon, ArrowRightCircleIcon} from "@heroicons/react/16/solid";
-import InputFieldSignUp from "@features/ui/components/InputFieldSignUp";
+import InputFieldSignUp from "@features/user/auth/SignUp/components/InputFieldSignUp";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {
 	selectUser,
@@ -16,16 +16,16 @@ import {
 	setSecteurActivite,
 	setSexe,
 	setTypeContenuPrefere,
-} from "@features/user/userSlice";
+} from "@app/_lib/reduxSlices/userSlice";
 import React from "react";
 import {useBoundedValue} from "@app/_lib/function_lib";
 import {useAppDispatch, useAppSelector} from "@app/_lib/hooks/redux-custom-hooks";
 import clsx from "clsx";
-import SignUpSlider from "@features/ui/components/SignUpSlider";
+import SignUpSlider from "@features/user/auth/SignUp/components/SignUpSlider";
 import {AnimatePresence, motion} from "framer-motion";
-import SexeSelectSignUp from "@features/ui/components/SexeSelectSignUp";
-import ContentSelectSignUp from "@features/ui/components/ContentSelectSignUp";
-import AgeRangeSelectSignUp from "@features/ui/components/AgeRangeSelectionSignUp";
+import SexeSelectSignUp from "@features/user/auth/SignUp/components/SexeSelectSignUp";
+import ContentSelectSignUp from "@features/user/auth/SignUp/components/ContentSelectSignUp";
+import AgeRangeSelectSignUp from "@features/user/auth/SignUp/components/AgeRangeSelectionSignUp";
 import {useSwipeable} from "react-swipeable";
 import userFields from "@app/_lib/signUpFields";
 import {SexeEnum} from "@app/_lib/enums";

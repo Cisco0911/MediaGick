@@ -38,6 +38,7 @@ const userExample = {
 	secteur_activite: 'Informatique',
 	type_contenu_prefere: TypeContenuPrefereEnum.VIDEO,
 	publics_cibles: [
+		// PublicsCiblesEnum.AGES_13_18,
 		PublicsCiblesEnum.AGES_18_24,
 		PublicsCiblesEnum.AGES_35_54,
 		PublicsCiblesEnum.AGES_50_77

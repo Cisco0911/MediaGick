@@ -11,7 +11,7 @@ import {useState} from 'react';
  * @param enumObj The enum object to convert.
  * @returns An array of objects, each with an `id` (string) and `label` (string).
  */
-export function enumToArray<T extends object>(enumObj: T): { id: string; label: string }[] {
+export function enumToArray(enumObj: any): { id: string; label: string }[] {
 	return Object.keys(enumObj)
 		.filter((key) => isNaN(Number(key))) // Filter out numeric keys
 		.map((key) => ({
@@ -89,7 +89,7 @@ export function toggleValueInList<T>(list: T[], value: T, comparer?: (a: T, b: T
 	return exists
 		// If the value is found, use filter to create a new array without the value.
 		? list.filter(item => !compare(item, value))
-		// If the value is not found, use the spread operator and array concatenation to add the value to the end of the list.
+		// If the value is not found, use the spread operator and array concatenation to new the value to the end of the list.
 		: [...list, value];
 }
 

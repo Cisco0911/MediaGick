@@ -11,13 +11,9 @@ export default function Layout({ children, }: { children: React.ReactNode }) {
 
 			<SideBar />
 
-			<div className={"relative z-10 h-full flex-grow p-7 flex overflow-hidden"}>
+			<div className={"relative z-10 h-screen flex-grow p-7 flex overflow-hidden"}>
 
-				<div className={"w-full h-full p-12 rounded-[1.875rem] bg-[#0c1214]"}>
-					<div className={"w-full h-full rounded-3xl overflow-hidden bg-transparent"}>
-						{children}
-					</div>
-				</div>
+				{children}
 
 			</div>
 

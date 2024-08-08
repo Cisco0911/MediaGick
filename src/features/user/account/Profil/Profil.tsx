@@ -3,13 +3,11 @@
 import clsx from "clsx";
 import {IdentificationIcon} from "@heroicons/react/24/solid";
 import {PencilSquareIcon} from "@heroicons/react/24/solid";
-import {motion} from "framer-motion";
-import {Popover, PopoverTrigger, PopoverContent} from "@nextui-org/popover";
-import ChangePasswordForm from "@features/ui/components/ChangePasswordForm";
-import {UserInfo} from "@app/_lib/parsers";
+import ChangePasswordForm from "@features/user/account/Profil/components/ChangePasswordForm";
+import {UserInfo} from "@app/_lib/interfaces";
 
 
-interface ProfilProps {
+type ProfilProps = {
 	user?: UserInfo
 }
 

@@ -3,9 +3,10 @@
 
 
 import {PublicsCiblesEnum, SexeEnum, TypeContenuPrefereEnum} from "../enums";
-import {parseToUserSession, UserInfo} from "@app/_lib/parsers";
+import {parseToUser, parseToUserSession} from "@app/_lib/parsers";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
+import {UserInfo} from "@app/_lib/interfaces";
 
 
 const API_BASE_URL = process.env.API_BASE_URL
@@ -30,7 +31,7 @@ function action<T extends any[], U>(
 }
 
 
-function secondsFromNow(inputDate: string): number {
+export async function secondsFromNow(inputDate: string): Promise<number> {
 
 	const targetDate = new Date(inputDate);
 
@@ -69,20 +70,49 @@ export const login = action(async (email: string, password: string) => {
 	cookies().set("session", JSON.stringify(userSession.sessionData), {
 		httpOnly: true,
 		secure: true,
-		maxAge: secondsFromNow(userSession.access_expiration),
+		maxAge: await secondsFromNow(userSession.access_expiration),
 		path: '/',
 	})
 
 	cookies().set("refresh", JSON.stringify(userSession.refresh_token), {
 		httpOnly: true,
 		secure: true,
-		maxAge: secondsFromNow(userSession.refresh_expiration),
+		maxAge: await secondsFromNow(userSession.refresh_expiration),
 		path: '/',
 	})
 
 	redirect("/dashboard")
 
 	return;
+
+})
+
+export const getMe = action(async (accessToken: string) => {
+
+	let res: Response
+
+	try {
+		res = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${accessToken}`
+			},
+		})
+	} catch (err) {
+		throw new Error('Something went wrong')
+	}
+
+	const content: any = await res.json()
+
+	if (!res.ok) {
+		console.log(JSON.stringify(content))
+		throw new ClientError(`${content.detail}`)
+	}
+
+
+
+	return parseToUser(content);
 
 })
 
@@ -102,8 +132,26 @@ export const signUp = action(async (user: signUpSchema)=> {
 
 	let res : Response
 
+	const user1 = {
+		"nom": "string",
+		"prenom": "string",
+		"email": "gyo@mail.com",
+		"age": 1,
+		"sexe": 1,
+		"mot_de_passe": "stringst",
+		"objectif_principal": "string",
+		"secteur_activite": "string",
+		"type_contenu_prefere": 1,
+		"publics_cibles": [
+			{
+				"libelle": 1
+			}
+		]
+	}
+
 	try {
-		// console.log(JSON.stringify(user))
+		console.log(JSON.stringify(user1))
+		console.log(JSON.stringify(user))
 		res = await fetch(`${API_BASE_URL}/api/v1/auth/sign-up`, {
 			method: 'POST',
 			headers: {
@@ -120,7 +168,7 @@ export const signUp = action(async (user: signUpSchema)=> {
 	const content: any = await res.json()
 
 	if (!res.ok) {
-		// console.log(JSON.stringify(content))
+		console.log(JSON.stringify(content))
 		throw new ClientError(`${content.detail}`)
 	}
 
@@ -143,6 +191,7 @@ export async function getUserSession(){
 export const getNewAccessToken = action(async (refreshToken: string) => {
 	let res: Response
 	try {
+		console.log("trying refreshing token")
 		res = await fetch(`${API_BASE_URL}/api/v1/auth/refresh-token?refresh_token=${refreshToken}`, {
 			method: 'POST',
 			headers: {
@@ -150,41 +199,44 @@ export const getNewAccessToken = action(async (refreshToken: string) => {
 			},
 		})
 	} catch (err) {
+		console.log("failed refreshing token-unknown error", err)
+
 		throw new Error('Something went wrong')
 	}
 
 	const content: any = await res.json()
 
 	if (!res.ok) {
+		console.log("failed refreshing token", content, cookies().toString())
+
 		throw new ClientError(`${content.detail}`)
 	}
 
-	const {access_token, access_expiration, refresh_token, refresh_expiration} = content
+	// console.log(content)
+	const {access_token, access_expiration, refresh_token, refresh_expiration} = content;
 
-	const user = JSON.parse(cookies().get("session")!.value).user as UserInfo;
+	let user: any
 
-	const sessionData = {
-		access_token, user
+	try {
+		user = await getMe(access_token)
+	}
+	catch (err) {
+		console.log("failed refreshing token", err)
+		throw new Error('Something went wrong')
 	}
 
-	cookies().delete("session");
-	cookies().delete("refresh");
-
-	cookies().set("session", JSON.stringify(sessionData), {
-		httpOnly: true,
-		secure: true,
-		maxAge: secondsFromNow(access_expiration),
-		path: '/',
-	});
-
-	cookies().set("refresh", refresh_token, {
-		httpOnly: true,
-		secure: true,
-		maxAge: secondsFromNow(refresh_expiration),
-		path: '/',
-	});
-
-	return ""
+	if (user.ok){
+		return {
+			access_token,
+			access_expiration,
+			refresh_token,
+			refresh_expiration,
+			user: user.data
+		}
+	}
+	else {
+		throw new ClientError(`${user.error}`)
+	}
 })
 
 export const logout = action(async () => {

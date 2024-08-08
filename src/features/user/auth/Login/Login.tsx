@@ -9,7 +9,7 @@ import {
 	selectUser,
 	setEmail,
 	setMotDePasse,
-} from "@features/user/userSlice";
+} from "@app/_lib/reduxSlices/userSlice";
 import {AtSymbolIcon} from "@heroicons/react/24/outline";
 import {LockClosedIcon} from "@heroicons/react/24/solid";
 import clsx from "clsx";

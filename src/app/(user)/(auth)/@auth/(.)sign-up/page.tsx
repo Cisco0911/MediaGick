@@ -1,5 +1,5 @@
 import Modal from "@features/ui/components/Modal";
-import SignUp from "@features/user/auth/SignUp";
+import SignUp from "@features/user/auth/SignUp/SignUp";
 
 
 export default function SignUpPage() {

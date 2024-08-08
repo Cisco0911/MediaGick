@@ -1,5 +1,5 @@
 
-import SignUp from "@features/user/auth/SignUp";
+import SignUp from "@features/user/auth/SignUp/SignUp";
 
 
 

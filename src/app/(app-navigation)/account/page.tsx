@@ -1,7 +1,5 @@
-import Profil from "@features/user/account/Profil";
-import Wallet from "@features/user/account/Wallet";
-import {cookies} from "next/headers";
-import {UserInfo} from "@app/_lib/parsers";
+import Profil from "@features/user/account/Profil/Profil";
+import Wallet from "@features/user/account/Wallet/Wallet";
 import {getUserSession} from "@app/_lib/actions/auth";
 
 

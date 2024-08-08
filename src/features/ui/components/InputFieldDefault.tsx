@@ -45,7 +45,7 @@ const InputField: React.FC<InputFieldProps> = ({
 			"group relative h-auto aspect-[309/50] flex items-center px-2.5 space-x-2.5",
 			className,
 			// "focus-visible:outline-none focus-within:outline-none",
-			"focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:ring-offset-secondary",
+			"focus-within:ring-2 focus-within:ring-primary",
 			{"focus-within:ring-red-500": !!error}
 		)}>
 
