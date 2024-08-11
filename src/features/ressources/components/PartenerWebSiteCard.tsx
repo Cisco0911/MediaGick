@@ -6,6 +6,7 @@ import Amazon from "@app/_assets/image/partener-logo/Amazon.png"
 import PlayStore from "@app/_assets/image/partener-logo/PlayStore.png"
 import AppStore from "@app/_assets/image/partener-logo/AppStore.png"
 import ImmoAsk from "@app/_assets/image/partener-logo/ImmoAsk.png"
+import CoinAfrique from "@app/_assets/image/partener-logo/CoinAfrique2.png"
 import LinkedIn from "@app/_assets/image/partener-logo/LinkedIn.png"
 import GoogleMap from "@app/_assets/image/partener-logo/GoogleMap.png"
 import {GlobeEuropeAfricaIcon} from "@heroicons/react/24/solid";
@@ -45,7 +46,7 @@ function PartenerWebSiteCard({
 				isBlurred
 				className={`relative p-5 overflow-hidden`}
 				style={{
-					background: color + "73",
+					background: isActive ? "white" : color + "73",
 				}}
 			>
 
@@ -64,8 +65,8 @@ function PartenerWebSiteCard({
 				<CardBody>
 					<div className={"flex flex-col items-center space-y-5"}>
 
-						<span className={"text-custom_white text-3xl font-bold"}>{label}</span>
-						<div className={"relative w-40 h-40 flex justify-center items-center"}>
+						<span style={{ color: isActive ? "black" : "white" }} className={"text-3xl font-bold"}>{label}</span>
+						<div className={"relative w-40 h-40 flex justify-center items-center rounded-3xl overflow-hidden"}>
 							{children}
 						</div>
 
@@ -177,6 +178,28 @@ export function ImmoAskCard({domain}: ConcreteProps) {
 		>
 			<Image src={ImmoAsk}
 			       alt={"ImmoAsk logo"}
+			       />
+		</PartenerWebSiteCard>
+	)
+
+}
+
+export function CoinAfriqueCard({domain}: ConcreteProps) {
+
+	const matcher = [
+		"coinafrique.com",
+		"www.coinafrique.com",
+		"tg.coinafrique.com"
+	]
+
+	return(
+		<PartenerWebSiteCard
+			isActive={ matcher.includes(domain) }
+			color={"#2d2a2a"}
+			label={"Coin Afrique"}
+		>
+			<Image src={CoinAfrique}
+			       alt={"Coin Afrique logo"}
 			       />
 		</PartenerWebSiteCard>
 	)

@@ -5,7 +5,6 @@ import {
 	PublicsCiblesEnum,
 	SexeEnum,
 	TypeContenuPrefereEnum,
-	TypeProductEnum
 } from "@app/_lib/enums";
 import {Product} from "@app/_lib/interfaces";
 
@@ -122,10 +121,9 @@ export const AddProductSchema = z.object({
 				valeur: z.string(),
 			})
 		)
-		.nullable(),
+		.default([])
 });
 export const AutoAddProductSchema = z.object({
-	libelle: z.string().min(1),
 	telephone_marchand: z.string().min(1),
 	// id_createur: z.number(),
 	// logo: z.string(),
@@ -149,6 +147,7 @@ export const UpdateProductSchema = z.object({
 			z.object({
 				nom: z.string(),
 				valeur: z.string(),
+				id: z.number(),
 			})
 		)
 		.nullable(),

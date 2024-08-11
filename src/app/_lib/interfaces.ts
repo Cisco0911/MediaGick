@@ -3,8 +3,7 @@ import {
 	OfferNatureEnum,
 	PublicsCiblesEnum,
 	SexeEnum,
-	TypeContenuPrefereEnum,
-	TypeProductEnum,
+	TypeContenuPrefereEnum, TypeProduct,
 } from "@app/_lib/enums";
 
 
@@ -37,11 +36,11 @@ export interface Product {
 	est_disponible: boolean;
 	nombre_jours_garantie: number;
 	qte_disponible: number;
-	nature: OfferNatureEnum;
+	nature?: OfferNatureEnum;
 	id_createur: number | null;
 	logo: string | null;
-	images_offres: string[] | null;
-	type: TypeProductEnum;
+	images_offres: {id: number; chemin: string}[] | null;
+	type?: typeof TypeProduct[keyof typeof TypeProduct];
 	id: number;
 	attributs_offres: Array<{
 		nom: string;

@@ -7,7 +7,7 @@ import {Select, SelectItem} from "@nextui-org/select";
 type NextUiSelectCustmProps = {
 	label: string,
 	placeholder: string,
-	itemArray: { id: string; label: string }[],
+	itemArray: { [key: string]: number },
 	disabled?: boolean,
 	error?: any,
 }
@@ -38,9 +38,13 @@ const NextUiSelectCustm = forwardRef<HTMLSelectElement, NextUiSelectCustmProps>(
 					{...props}
 				>
 					{
-						itemArray.map(({ id, label }) => (
-							<SelectItem key={label}>
-								{id}
+						Object.entries(itemArray).map(([key, value]) => (
+
+							<SelectItem
+								key={value}
+								value={value}
+							>
+								{key}
 							</SelectItem>
 						))
 					}

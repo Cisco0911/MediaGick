@@ -96,7 +96,7 @@ export default function LogoImage({ children, onChange }: LogoImageProps) {
 						<>
 							<div
 								className={clsx(
-									"relative rounded-3xl object-cover overflow-hidden",
+									"relative rounded-3xl overflow-hidden",
 									"w-full h-full bg-tertiary",
 									"flex justify-center items-center"
 								)}
@@ -105,6 +105,7 @@ export default function LogoImage({ children, onChange }: LogoImageProps) {
 								       alt={acceptedFiles[0].name}
 								       fill
 								       quality={100}
+								       className={"object-cover"}
 								/>
 							</div>
 						</> :

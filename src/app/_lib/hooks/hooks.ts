@@ -20,6 +20,16 @@ export function useUrlQuery()
 		[searchParams]
 	)
 
+	const setQuery = useCallback(
+		(name: string, value: string) => {
+			const params = new URLSearchParams(searchParams.toString())
+			params.set(name, value)
+
+			return params.toString()
+		},
+		[searchParams]
+	)
+
 	const removeQuery = useCallback(
 		(name: string, value?: string) => {
 			const params = new URLSearchParams(searchParams.toString());
@@ -35,6 +45,7 @@ export function useUrlQuery()
 		pathname,
 		searchParams,
 		addQuery,
+		setQuery,
 		removeQuery
 	}
 }

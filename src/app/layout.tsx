@@ -3,12 +3,12 @@ import "./globals.css";
 import {Providers} from "@app/Providers";
 import React from "react";
 import {Toaster} from "react-hot-toast";
-import { Cormorant_Garamond, Josefin_Sans, Josefin_Slab } from "next/font/google";
+import { Inter } from "next/font/google";
 
 
-const font = Josefin_Slab({
-	weight: ['100', "200", '300', '400', "500", "600", '700'],
-	style: ['normal', "italic"],
+const font = Inter({
+	weight: ['100', "200", '300', '400', "500", "600", '700', '800', '900'],
+	style: ['normal'],
 	subsets: ['latin'],
 	display: 'swap',
 });

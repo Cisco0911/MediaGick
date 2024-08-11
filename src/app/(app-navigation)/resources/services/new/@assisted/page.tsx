@@ -3,15 +3,6 @@
 import clsx from "clsx";
 import {Chip} from "@nextui-org/chip";
 import React, {ReactNode, useRef} from "react";
-import NextUiInputCustm from "@features/ui/components/NextUiInputCustm";
-import NextUiSelectCustm from "@features/ui/components/NextUiSelectCustm";
-import {enumToArray} from "@app/_lib/function_lib";
-import {CurrencyEnum, OfferNatureEnum, TypeProductEnum} from "@app/_lib/enums";
-import NextUiTextAreaCustm from "@features/ui/components/NextUiTextAreaCustm";
-import {Button} from "@nextui-org/button";
-import {PlusIcon} from "@heroicons/react/24/outline";
-import LogoImage from "@features/ui/components/LogoImage";
-import DescriptiveImageDropZone from "@features/ui/components/DescriptiveImageDropZone";
 import {useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {AutoAddProductSchema} from "@app/_lib/schemas";

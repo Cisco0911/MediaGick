@@ -84,38 +84,48 @@ export const getProducts = action(async (): Promise<Product[]> => {
 
 })
 
-export const addProduct = action(async (data: FormData): Promise<Product> => {
-	let res: Response
-	try {
-		const userSession = (await getUserSession());
+export const addProduct = action(async (data: FormData, imageOffres?: FormData): Promise<Product> => {
 
-		// console.log(userSession)
+	const userSession = (await getUserSession());
 
-		res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/produits`, {
-			method: 'POST',
-			headers: {
-				'Authorization': `Bearer ${userSession.access_token}`
-			},
-			body: data
-		})
-	}
-	catch (err) {
-		console.log("Something went wrong", JSON.stringify(err), err)
-		throw new Error('Something went wrong')
-	}
+	// console.log(userSession)
 
-	const content: any = await res.json()
+	let res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/produits`, {
+		method: 'POST',
+		headers: {
+			'Authorization': `Bearer ${userSession.access_token}`
+		},
+		body: data
+	})
+
+	let content: any = await res.json()
 
 	if (!res.ok) {
 		console.log(JSON.stringify(content))
 		throw new ClientError(`${content.detail}`)
 	}
 
-	const products = validateResponse<Product>(content, ProductSchema)
+	if (imageOffres) {
+		res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/produits/${content.id}/images`, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${userSession.access_token}`
+			},
+			body: imageOffres
+		})
+		content = await res.json()
+	}
 
-	if (products) {
-		redirect('/resources/products')
-		return products
+	if (!res.ok) {
+		console.log(JSON.stringify(content))
+		throw new ClientError(`${content.detail}`)
+	}
+
+	const product = validateResponse<Product>(content, ProductSchema)
+
+	if (product) {
+		// redirect('/resources/products')
+		return product
 	}
 	else {
 		throw new Error('Unmatched Schema')
@@ -154,7 +164,7 @@ export const autoAddProduct = action(async (data: FormData): Promise<Product> =>
 	const products = validateResponse<Product>(content, ProductSchema)
 
 	if (products) {
-		redirect('/resources/products')
+		// redirect('/resources/products')
 		return products
 	}
 	else {
@@ -230,7 +240,7 @@ export const updateProduct = action(async (id: number, data: any): Promise<Produ
 	const products = validateResponse<Product>(content, ProductSchema)
 
 	if (products) {
-		redirect('/resources/products')
+		// redirect('/resources/products')
 		return products
 	}
 	else {

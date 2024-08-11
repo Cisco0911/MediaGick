@@ -55,14 +55,14 @@ export default function Wallet({user}: WalletProps) {
 
 				<div className={"w-full flex space-x-5 justify-center items-center"}>
 					<div
-						className={"relative overflow-hidden rounded-3xl bg-[#fbdb17] aspect-[138/115] w-36 h-auto object-cover"}>
+						className={"relative overflow-hidden rounded-3xl bg-[#fbdb17] aspect-[138/115] w-36 h-auto"}>
 						<Image src={Tmoney}
 						       alt={"Tmoney"}
 						       fill
 						       quality={100}
 						/>
 					</div>
-					<div className={"relative rounded-3xl bg-[#0067b3] aspect-[138/115] w-36 h-auto object-cover"}>
+					<div className={"relative rounded-3xl bg-[#0067b3] aspect-[138/115] w-36 h-auto"}>
 						<Image src={MoovMoney}
 						       alt={"Moov Money"}
 						       fill={true}

@@ -9,11 +9,10 @@ import {AddProductSchema} from "@app/_lib/schemas";
 import NextUiInputCustm from "@features/ui/components/NextUiInputCustm";
 import {Button} from "@nextui-org/button";
 import NextUiSelectCustm from "@features/ui/components/NextUiSelectCustm";
-import {enumToArray} from "@app/_lib/function_lib";
-import {CurrencyEnum, OfferNatureEnum, TypeProductEnum} from "@app/_lib/enums";
+import {Currency, CurrencyEnum, OfferNature, OfferNatureEnum, TypeProduct} from "@app/_lib/enums";
 import NextUiTextAreaCustm from "@features/ui/components/NextUiTextAreaCustm";
-import {PlusIcon} from "@heroicons/react/24/outline";
-import {useRef, useState} from "react";
+import {PlusIcon, XMarkIcon} from "@heroicons/react/24/outline";
+import {useEffect, useRef, useState} from "react";
 import React from "react";
 import {isEmpty} from "@nextui-org/shared-utils";
 import DescriptiveImageDropZone from "@features/ui/components/DescriptiveImageDropZone";
@@ -24,35 +23,66 @@ import {addProduct} from "@app/_lib/actions/fetchData";
 import {Image as Img} from "@nextui-org/image";
 import Image from "next/image";
 import {CheckBadgeIcon, CheckCircleIcon} from "@heroicons/react/24/solid";
+import {useRouter} from "next/navigation";
+import {Product} from "@app/_lib/interfaces";
+import {AddProduct} from "@app/(app-navigation)/resources/products/interfaces";
 
+
+
+const emptyProduct: AddProduct = {
+	libelle: "",
+	description: "",
+	telephone_marchand: "",
+	prix: 0,
+	unite_prix: "",
+	devise_prix: 1,
+	est_disponible: true,
+	nombre_jours_garantie: 0,
+	qte_disponible: 0,
+	nature: OfferNature.Physique,
+	type: TypeProduct["Electronique et electromenager"],
+	attributs_offres: [],
+};
 
 export default function NewProductPage() {
+
+	const router = useRouter()
+
+	const [readOnly, setReadOnly] = useState(false)
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		getValues,
+		setValue,
+		watch,
 		control,
-	} = useForm({
+	} = useForm<AddProduct>({
 		resolver: zodResolver(AddProductSchema),
+		defaultValues: emptyProduct,
 	});
 
+	const attributesOffres = watch("attributs_offres")
 	const attributesOffreErrors : any = errors?.attributs_offres || []
-	const [attOffreIndex, setAttOffreIndex] = useState<number[]>([0])
 
 	// console.log(attributesOffreErrors, attOffreIndex)
 	// console.log(errors)
 
 	function addAtt()
 	{
-		// setAttOffreIndex([...attOffreIndex, attOffreIndex[attOffreIndex.length - 1] + 1])
-		const currentAtt = getValues("attributs_offres")[attOffreIndex.length - 1]
+		const newAtt = attributesOffres[0]
 
-		if (currentAtt && !isEmpty(currentAtt.nom) && !isEmpty(currentAtt.valeur))
+		if (newAtt && !isEmpty(newAtt.nom) && !isEmpty(newAtt.valeur))
 		{
-			setAttOffreIndex([...attOffreIndex, attOffreIndex[attOffreIndex.length - 1] + 1])
+			setValue("attributs_offres", [...attributesOffres, newAtt])
 		}
+		else toast.error('Veuillez remplir les champs "Libelle" et "Valeur"')
+	}
+
+	function removeAtt(index: number) {
+
+		setValue("attributs_offres", attributesOffres.filter((_, i) => i !== index))
+		// console.log(attributesOffres.filter((_, i) => i !== index))
 	}
 
 
@@ -64,6 +94,8 @@ export default function NewProductPage() {
 	async function submit(data: any)
 	{
 		let formData = new FormData();
+		const imageOffres = new FormData();
+		let toastId: string = ""
 
 		data = AddProductSchema.safeParse(data)
 
@@ -74,7 +106,10 @@ export default function NewProductPage() {
 
 			data = data.data
 
-			data.attributs_offres = data.attributs_offres.filter((attr: { nom: string; valeur: string; }) => attr.nom !== "" && attr.valeur !== "");
+			data.attributs_offres = data.attributs_offres.filter((_: any, i: number) => i !== 0);
+
+			// console.log(data)
+			// return
 
 			for (let key in data) {
 				if (key === 'attributs_offres') {
@@ -82,7 +117,7 @@ export default function NewProductPage() {
 					formData.append(key, JSON.stringify(data[key]));
 				} else {
 					// Append other properties
-					formData.append(key, data[key]);
+					formData.append(key, data[key] || "");
 				}
 			}
 		}
@@ -102,8 +137,9 @@ export default function NewProductPage() {
 
 		if (descriptiveImages.current)
 		{
+			console.log("adding images", descriptiveImages.current)
 			for (let i = 0; i < descriptiveImages.current.length; i++) {
-				formData.append('descriptive_images', descriptiveImages.current[i])
+				imageOffres.append('images', descriptiveImages.current[i])
 			}
 		}
 		// else {
@@ -116,17 +152,31 @@ export default function NewProductPage() {
 		try {
 
 			setBusy(true);
+			toastId = toast.loading('Ajout du produit...');
 
-			const res = await addProduct(formData);
+			const res = await addProduct(formData, imageOffres);
 
 			if (res && !res.ok){
 
 				toast.error(`${res.error}`);
 
+				toast.dismiss(toastId)
+				setBusy(false);
+			}
+			else {
+
+				toast.dismiss(toastId)
+				toast.success("Produit ajoute avec succes")
+				console.log(res)
+
+				// setTimeout(() => {
+				// 	router.push("/resources/products")
+				// }, 1000)
 				setBusy(false);
 			}
 		}
 		catch (err) {
+			toast.dismiss(toastId)
 			console.log(err)
 			toast.error(`${err}`);
 
@@ -171,20 +221,20 @@ export default function NewProductPage() {
 						</div>
 
 						<div>
-							<NextUiSelectCustm label={"Type de Produit"}
-							                   placeholder={"Type"}
-							                   itemArray={enumToArray(TypeProductEnum)}
-							                   error={errors?.type?.message}
-							                   {...register("type")}
+							<NextUiSelectCustm label={"Nature du Produit"}
+							                   placeholder={"ex: Combustible"}
+							                   itemArray={OfferNature}
+							                   error={errors?.nature?.message}
+							                   {...register("nature")}
 							/>
 						</div>
 
 						<div>
-							<NextUiSelectCustm label={"Nature du Produit"}
-							                   placeholder={"ex: Combustible"}
-							                   itemArray={enumToArray(OfferNatureEnum)}
-							                   error={errors?.nature?.message}
-							                   {...register("nature")}
+							<NextUiSelectCustm label={"Type de Produit"}
+							                   placeholder={"Type"}
+							                   itemArray={TypeProduct}
+							                   error={errors?.type?.message}
+							                   {...register("type")}
 							/>
 						</div>
 
@@ -208,13 +258,13 @@ export default function NewProductPage() {
 
 							<NextUiSelectCustm label={"Devise"}
 							                   placeholder={"Devise"}
-							                   itemArray={enumToArray(CurrencyEnum)}
+							                   itemArray={Currency}
 							                   error={errors?.devise_prix?.message}
 							                   {...register("devise_prix")}
 							/>
 
 							<NextUiInputCustm type={"text"}
-							                  label={"Prix Unitaire"}
+							                  label={"Prix par"}
 							                  placeholder={"Par kg"}
 							                  error={errors?.unite_prix?.message}
 							                  {...register("unite_prix")}
@@ -249,34 +299,30 @@ export default function NewProductPage() {
 							/>
 						</div>
 
-						<div className={"w-full flex flex-col"}>
+						<div className={"w-full flex flex-col space-y-2"}>
 
 							<div className={"w-full flex justify-between items-end space-x-4"}>
 
-								{
-									attOffreIndex.map((_, index) => (
-										index === attOffreIndex.length - 1 &&
-                                        <React.Fragment key={index}>
-                                            <NextUiInputCustm type={"text"}
-                                                              label={"Attribut Produit"}
-                                                              placeholder={"Libelle attribut" + index}
-                                                              error={attributesOffreErrors[index]?.nom?.message}
-											                  {...register(`attributs_offres.${index}.nom`)}
-                                            />
+								<NextUiInputCustm type={"text"}
+								                  label={"Attribut Produit"}
+								                  placeholder={"Libelle attribut"}
+								                  isDisabled={readOnly}
+								                  error={attributesOffreErrors[0]?.nom?.message}
+								                  {...register(`attributs_offres.${0}.nom`)}
+								/>
 
-                                            <NextUiInputCustm type={"text"}
-                                                              label={" "}
-                                                              placeholder={"Valeur"}
-                                                              error={attributesOffreErrors[index]?.valeur?.message}
-											                  {...register(`attributs_offres.${index}.valeur`)}
-                                            />
-                                        </React.Fragment>
-									))
-								}
+								<NextUiInputCustm type={"text"}
+								                  label={" "}
+								                  placeholder={"Valeur"}
+								                  isDisabled={readOnly}
+								                  error={attributesOffreErrors[0]?.valeur?.message}
+								                  {...register(`attributs_offres.${0}.valeur`)}
+								/>
 
 								<Button color={"primary"}
 								        className={"text-tertiary font-semibold flex-shrink-0"}
 								        endContent={<PlusIcon className={"size-4 stroke-tertiary"}/>}
+								        isDisabled={readOnly}
 									// disabled={attributesOffreErrors[attOffreIndex[attOffreIndex.length - 1]]?.nom || attributesOffreErrors[attOffreIndex[attOffreIndex.length - 1]]?.valeur}
 									    onClick={addAtt}>
 									Ajouter
@@ -284,16 +330,41 @@ export default function NewProductPage() {
 
 							</div>
 
+							{
+								attributesOffres.length > 1 &&
+                                <div className={"w-full flex flex-wrap gap-2 p-2 rounded-xl bg-secondary"}>
+
+									{
+										attributesOffres.slice(1).map((att, index) => (
+
+											<div
+												className={"h-[5rem] aspect-[65/57] flex flex-col p-2 rounded-lg bg-tertiary"}
+												key={index}>
+												<XMarkIcon className={"size-4 stroke-custom_white cursor-pointer"}
+												           onClick={() => {
+													           removeAtt(index + 1)
+												           }}/>
+												<span
+													className={"text-foreground whitespace-nowrap overflow-hidden text-ellipsis"}>{att.nom}</span>
+												<span
+													className={"text-sm text-foreground font-extralight whitespace-nowrap overflow-hidden text-ellipsis"}>{att.valeur}</span>
+											</div>
+										))
+									}
+
+                                </div>
+							}
+
 						</div>
 
 						<div className={"w-full flex flex-col space-y-1"}>
 							<span className={"text-foreground font-normal"}>Logo</span>
-							<LogoImage onChange={files => setLogoImage(files[0])} />
+							<LogoImage onChange={files => setLogoImage(files[0])}/>
 						</div>
 
 						<div className={"w-full flex flex-col space-y-1"}>
 							<span className={"text-foreground font-normal"}>Image descriptives</span>
-							<DescriptiveImageDropZone onChange={files => descriptiveImages.current = files} />
+							<DescriptiveImageDropZone onChange={files => descriptiveImages.current = files}/>
 						</div>
 
 						<div className={"w-full flex justify-center"}>
@@ -312,7 +383,7 @@ export default function NewProductPage() {
 				"hidden xl:flex"
 			)}>
 
-				<div className={"relative w-full h-1/2 rounded-2xl object-cover overflow-hidden"}>
+				<div className={"relative w-full h-1/2 rounded-2xl overflow-hidden"}>
 					{
 						logoImage &&
 						// <Img
@@ -323,6 +394,7 @@ export default function NewProductPage() {
                         <Image src={URL.createObjectURL(logoImage)}
                                alt={"Produit Logo"}
                                fill
+                               className={"object-cover"}
                         />
 					}
 				</div>
@@ -353,7 +425,6 @@ export default function NewProductPage() {
 								useWatch({
 									control,
 									name: "prix",
-									defaultValue: "_____",
 								})
 							} FCFA
 						</span>

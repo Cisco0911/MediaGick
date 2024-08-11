@@ -24,7 +24,7 @@ export default function FilterChip({ label }: FilterChipProps) {
 			query.router.push(query.pathname + '?' + query.removeQuery("f", encodeURIComponent(label)))
 		}
 		else {
-			query.router.push(query.pathname + '?' + query.addQuery("f", encodeURIComponent(label)))
+			query.router.push(query.pathname + '?' + query.setQuery("f", encodeURIComponent(label)))
 		}
 	}
 

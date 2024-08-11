@@ -5,8 +5,7 @@ import {Chip} from "@nextui-org/chip";
 import React, {ReactNode, useRef} from "react";
 import NextUiInputCustm from "@features/ui/components/NextUiInputCustm";
 import NextUiSelectCustm from "@features/ui/components/NextUiSelectCustm";
-import {enumToArray} from "@app/_lib/function_lib";
-import {CurrencyEnum, OfferNatureEnum, TypeProductEnum} from "@app/_lib/enums";
+import {TypeProduct} from "@app/_lib/enums";
 import NextUiTextAreaCustm from "@features/ui/components/NextUiTextAreaCustm";
 import {Button} from "@nextui-org/button";
 import {PlusIcon} from "@heroicons/react/24/outline";
@@ -19,16 +18,19 @@ import {GlobeEuropeAfricaIcon} from "@heroicons/react/24/solid";
 import {
 	AmazonCard,
 	AnkaCard,
-	AppStoreCard, GoogleMapCard,
+	AppStoreCard, CoinAfriqueCard, GoogleMapCard,
 	ImmoAskCard, LinkedInCard,
 	PlayStoreCard, VotreSiteCard
 } from "@features/ressources/components/PartenerWebSiteCard";
 import {isEmpty} from "@nextui-org/shared-utils";
 import toast from "react-hot-toast";
 import {autoAddProduct} from "@app/_lib/actions/fetchData";
+import {useRouter} from "next/navigation";
 
 
 export default function NewProductPage() {
+
+	const router = useRouter()
 
 	const {
 		register,
@@ -48,6 +50,7 @@ export default function NewProductPage() {
 	async function submit(data: any)
 	{
 		let formData = new FormData();
+		let toastId: string = ""
 
 		data = AutoAddProductSchema.safeParse(data)
 
@@ -79,20 +82,32 @@ export default function NewProductPage() {
 		try {
 
 			setBusy(true);
+			toastId = toast.loading('Ajout du produit...');
 
 			const res = await autoAddProduct(formData);
 
 			if (res && !res.ok){
 
+				toast.dismiss(toastId)
 				toast.error(`${res.error}`);
 
 				setBusy(false);
+			}
+			else {
+
+				toast.dismiss(toastId)
+				toast.success("Produit ajoute avec succes")
+
+				setTimeout(() => {
+					router.push("/resources/products")
+				}, 1000)
 			}
 		}
 		catch (err) {
 			console.log(err)
 			toast.error(`${err}`);
 
+			toast.dismiss(toastId)
 			setBusy(false);
 		}
 
@@ -120,14 +135,15 @@ export default function NewProductPage() {
 	))
 
 	const partenerLogos: ReactNode[] = [
-		<AnkaCard key={1} domain={hostname} />,
-		<AmazonCard key={2} domain={hostname} />,
-		<PlayStoreCard key={3} domain={hostname} />,
-		<AppStoreCard key={4} domain={hostname} />,
+		// <AnkaCard key={1} domain={hostname} />,
+		// <AmazonCard key={2} domain={hostname} />,
+		// <PlayStoreCard key={3} domain={hostname} />,
+		// <AppStoreCard key={4} domain={hostname} />,
 		<ImmoAskCard key={5} domain={hostname} />,
-		<LinkedInCard key={6} domain={hostname} />,
-		<GoogleMapCard key={7} domain={hostname} />,
-		<VotreSiteCard key={8} domain={hostname} />,
+		<CoinAfriqueCard key={5} domain={hostname} />,
+		// <LinkedInCard key={6} domain={hostname} />,
+		// <GoogleMapCard key={7} domain={hostname} />,
+		// <VotreSiteCard key={8} domain={hostname} />,
 	]
 
 
@@ -157,18 +173,9 @@ export default function NewProductPage() {
 					>
 
 						<div className={"max-w-[50rem] w-full"}>
-							<NextUiInputCustm type={"text"}
-							                  label={"Nom Produit"}
-							                  placeholder={"Produit"}
-							                  error={errors?.libelle?.message}
-								              {...register("libelle")}
-							/>
-						</div>
-
-						<div className={"max-w-[50rem] w-full"}>
 							<NextUiSelectCustm label={"Type de Produit"}
 							                   placeholder={"Type"}
-							                   itemArray={enumToArray(TypeProductEnum)}
+							                   itemArray={TypeProduct}
 							                   error={errors?.type_offre?.message}
 								               {...register("type_offre")}
 							/>

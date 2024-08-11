@@ -65,8 +65,9 @@ body {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background-image: url('./_assets/image/Animated Shape.svg');
-    background-attachment: fixed;
+    /*background-image: url('./_assets/image/Animated Shape.svg');*/
+    /*background-attachment: fixed;*/
+    background-color: #0f1619;
 }
 
 #background{
@@ -148,7 +149,7 @@ input[type="number"]::-webkit-outer-spin-button {
     overflow: auto;
     position: relative;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 20rem));
     gap: 1.05rem;
 
 }

@@ -18,31 +18,57 @@ export enum PublicsCiblesEnum {
 }
 
 export enum CurrencyEnum { // TODO: Update devise
-	USD = 1,
-	EUR = 2
+	CFA = 1,
+	// EUR = 2
+}
+export const Currency = {
+	CFA: 1,
+	// EUR: 2
 }
 
 export enum OfferNatureEnum { // TODO: Update product nature
-	Nature1 = 1,
-	Nature2 = 2
+	Physique = 1,
+	Digital = 2
+}
+export const OfferNature = {
+	Physique: 1,
+	Digital: 2
 }
 
 // type: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16;
-export enum TypeProductEnum { // TODO: Update typeProductEnum to
-	Type1 = 1,
-	Type2 = 2,
-	Type3 = 3,
-	Type4 = 4,
-	Type5 = 5,
-	Type6 = 6,
-	Type7 = 7,
-	Type8 = 8,
-	Type9 = 9,
-	Type10 = 10,
-	Type11 = 11,
-	Type12 = 12,
-	Type13 = 13,
-	Type14 = 14,
-	Type15 = 15,
-	Type16 = 16
-}
+// export enum TypeProductEnum {
+// 	ELECTRONIQUE_ET_ELECTROMENAGER = 1,
+// 	VETEMENTS_ET_ACCESSOIRES = 2,
+// 	ALIMENTATION = 3,
+// 	MEUBLES_ET_DECORATION = 4,
+// 	COSMETIQUES_ET_SOINS_PERSONNELS = 5,
+// 	LIVRES_ET_MEDIAS_PHYSIQUES = 6,
+// 	JOUETS_ET_JEUX = 7,
+// 	OUTILS_ET_EQUIPEMENTS = 8,
+// 	ARTICLES_DE_SPORT_ET_LOISIRS = 9,
+// 	PRODUITS_DE_SANTE = 10,
+// 	PRODUITS_POUR_ANIMAUX = 11,
+// 	PRODUITS_DE_JARDINAGE = 12,
+// 	AUTOMOBILE_ET_ACCESSOIRES = 13,
+// 	IMMOBILIER = 14,
+// 	LOGICIELS_ET_APPLICATIONS = 15,
+// 	EBOOKS_ET_MEDIAS_NUMERIQUES = 16
+// }
+export const TypeProduct = {
+	"Electronique et electromenager": 1,
+	"Vetements et accessoires": 2,
+	"Alimentation": 3,
+	"Meubles et decoration": 4,
+	"Cosmetiques et soins personnels": 5,
+	"Livres et medias physiques": 6,
+	"Jouets et jeux": 7,
+	"Outils et equipements": 8,
+	"Articles de sport et loisirs": 9,
+	"Produits de sante": 10,
+	"Produits pour animaux": 11,
+	"Produits de jardinage": 12,
+	"Automobile et accessoires": 13,
+	"Immobilier": 14,
+	"Logiciels et applications": 15,
+	"Ebooks et medias numeriques": 16
+};

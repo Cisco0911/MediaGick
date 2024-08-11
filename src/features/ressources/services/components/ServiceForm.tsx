@@ -5,7 +5,7 @@ import NextUiInputCustm from "@features/ui/components/NextUiInputCustm";
 import NextUiSelectCustm from "@features/ui/components/NextUiSelectCustm";
 import NextUiTextAreaCustm from "@features/ui/components/NextUiTextAreaCustm";
 import {Button} from "@nextui-org/button";
-import {PlusIcon} from "@heroicons/react/24/outline";
+import {PlusIcon, XMarkIcon} from "@heroicons/react/24/outline";
 import LogoImage from "@features/ui/components/LogoImage";
 import DescriptiveImageDropZone from "@features/ui/components/DescriptiveImageDropZone";
 import {CheckBadgeIcon, CheckCircleIcon, PaintBrushIcon} from "@heroicons/react/24/solid";
@@ -16,15 +16,15 @@ import {useRef, useState} from "react";
 import {isEmpty} from "@nextui-org/shared-utils";
 import toast from "react-hot-toast";
 import {addProduct, updateProduct} from "@app/_lib/actions/fetchData";
-import {enumToArray} from "@app/_lib/function_lib";
-import {CurrencyEnum, OfferNatureEnum} from "@app/_lib/enums";
+import {Currency, CurrencyEnum, OfferNature, OfferNatureEnum} from "@app/_lib/enums";
 import Image from "next/image";
 import React from "react";
 import {Chip} from "@nextui-org/chip";
-import {Service} from "@app/(app-navigation)/resources/services/interfaces";
+import {AddService, Service, UpdateService} from "@app/(app-navigation)/resources/services/interfaces";
 import {AddServiceSchema, UpdateServiceSchema} from "@app/(app-navigation)/resources/services/schemas";
-import {TypeServiceEnum} from "@app/(app-navigation)/resources/services/enums";
 import {addService, updateService} from "@app/(app-navigation)/resources/services/actions";
+import {TypeService} from "@app/(app-navigation)/resources/services/enums";
+import {useRouter} from "next/navigation";
 
 
 
@@ -34,39 +34,53 @@ type ProductProps = {
 	isUpdate?: boolean
 }
 
+type IFormInterface<T extends boolean> = T extends true
+	? UpdateService
+	: AddService;
 
-export default function ServiceForm({ service, isUpdate }: ProductProps) {
+
+export default function ServiceForm({ service, isUpdate = false }: ProductProps) {
+
+	const router = useRouter()
 
 	const [readOnly, setReadOnly] = useState(isUpdate)
 
 	// if (isUpdate) service = service as Service
 
+	type FormInterface  = IFormInterface<typeof isUpdate>
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-		getValues,
+		setValue,
 		watch,
-	} = useForm({
-		resolver: zodResolver(AddServiceSchema),
-		defaultValues: service,
+	} = useForm<AddService>({
+		resolver: zodResolver(isUpdate ? UpdateServiceSchema : AddServiceSchema),
+		defaultValues: {...service, attributs_offres: [{nom: '', valeur: ''}, ...service.attributs_offres]},
 	});
 
+	const attributesOffres = watch("attributs_offres")
 	const attributesOffreErrors : any = errors?.attributs_offres || []
-	const [attOffreIndex, setAttOffreIndex] = useState<number[]>([0])
 
 	// console.log(attributesOffreErrors, attOffreIndex)
 	// console.log(errors)
 
 	function addAtt()
 	{
-		// setAttOffreIndex([...attOffreIndex, attOffreIndex[attOffreIndex.length - 1] + 1])
-		const currentAtt = getValues("attributs_offres")[attOffreIndex.length - 1]
+		const newAtt = attributesOffres[0]
 
-		if (currentAtt && !isEmpty(currentAtt.nom) && !isEmpty(currentAtt.valeur))
+		if (newAtt && !isEmpty(newAtt.nom) && !isEmpty(newAtt.valeur))
 		{
-			setAttOffreIndex([...attOffreIndex, attOffreIndex[attOffreIndex.length - 1] + 1])
+			setValue("attributs_offres", [...attributesOffres, newAtt])
 		}
+		else toast.error('Veuillez remplir les champs "Libelle" et "Valeur"')
+	}
+
+	function removeAtt(index: number) {
+
+		setValue("attributs_offres", attributesOffres.filter((_, i) => i !== index))
+		// console.log(attributesOffres.filter((_, i) => i !== index))
 	}
 
 
@@ -78,6 +92,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 	async function submit(data: any)
 	{
 		let formData = new FormData();
+		let toastId: string = ""
 
 		data = isUpdate ? UpdateServiceSchema.safeParse(data) : AddServiceSchema.safeParse(data)
 
@@ -88,7 +103,10 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 
 			data = data.data
 
-			data.attributs_offres = data.attributs_offres.filter((attr: { nom: string; valeur: string; }) => attr.nom !== "" && attr.valeur !== "");
+			data.attributs_offres = data.attributs_offres.filter((_: any, i: number) => i !== 0);
+
+			// console.log(data)
+			// return
 
 			if (!isUpdate){
 				for (let key in data) {
@@ -120,7 +138,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 			if (descriptiveImages.current)
 			{
 				for (let i = 0; i < descriptiveImages.current.length; i++) {
-					formData.append('descriptive_images', descriptiveImages.current[i])
+					formData.append('images_offres', descriptiveImages.current[i])
 				}
 			}
 		}
@@ -134,6 +152,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 		try {
 
 			setBusy(true);
+			toastId = toast.loading(isUpdate ? "Modification en cours..." : "Ajout en cours...");
 
 			const res = isUpdate ? await updateService(service.id, data) : await addService(formData);
 
@@ -143,8 +162,18 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 
 				setBusy(false);
 			}
+			else {
+
+				toast.dismiss(toastId)
+				toast.success(isUpdate ? "Service mis a jour avec succes" : "Service ajoute avec succes");
+
+				setTimeout(() => {
+					router.push("/resources/services");
+				}, 1000)
+			}
 		}
 		catch (err) {
+			toast.dismiss(toastId)
 			console.log(err)
 			toast.error(`${err}`);
 
@@ -215,22 +244,22 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 					</div>
 
 					<div>
-						<NextUiSelectCustm label={"Type de Service"}
-						                   placeholder={"Type"}
-						                   itemArray={enumToArray(TypeServiceEnum)}
+						<NextUiSelectCustm label={"Nature du Service"}
+						                   placeholder={"ex: Combustible"}
+						                   itemArray={OfferNature}
 						                   disabled={readOnly}
-						                   error={errors?.type?.message}
-						                   {...register("type")}
+						                   error={errors?.nature?.message}
+						                   {...register("nature")}
 						/>
 					</div>
 
 					<div>
-						<NextUiSelectCustm label={"Nature du Service"}
-						                   placeholder={"ex: Combustible"}
-						                   itemArray={enumToArray(OfferNatureEnum)}
+						<NextUiSelectCustm label={"Type de Service"}
+						                   placeholder={"Type"}
+						                   itemArray={TypeService}
 						                   disabled={readOnly}
-						                   error={errors?.nature?.message}
-						                   {...register("nature")}
+						                   error={errors?.type?.message}
+						                   {...register("type")}
 						/>
 					</div>
 
@@ -256,7 +285,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 
 						<NextUiSelectCustm label={"Devise"}
 						                   placeholder={"Devise"}
-						                   itemArray={enumToArray(CurrencyEnum)}
+						                   itemArray={Currency}
 						                   disabled={readOnly}
 						                   error={errors?.devise_prix?.message}
 						                   {...register("devise_prix")}
@@ -312,32 +341,25 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 						/>
 					</div>
 
-					<div className={"w-full flex flex-col"}>
+					<div className={"w-full flex flex-col space-y-2"}>
 
 						<div className={"w-full flex justify-between items-end space-x-4"}>
 
-							{
-								attOffreIndex.map((_, index) => (
-									index === attOffreIndex.length - 1 &&
-                                    <React.Fragment key={index}>
-                                        <NextUiInputCustm type={"text"}
-                                                          label={"Attribut du Service"}
-                                                          placeholder={"Libelle attribut" + index}
-                                                          isDisabled={readOnly}
-                                                          error={attributesOffreErrors[index]?.nom?.message}
-										                  {...register(`attributs_offres.${index}.nom`)}
-                                        />
+							<NextUiInputCustm type={"text"}
+							                  label={"Attribut Service"}
+							                  placeholder={"Libelle attribut"}
+							                  isDisabled={readOnly}
+							                  error={attributesOffreErrors[0]?.nom?.message}
+							                  {...register(`attributs_offres.${0}.nom`)}
+							/>
 
-                                        <NextUiInputCustm type={"text"}
-                                                          label={" "}
-                                                          placeholder={"Valeur"}
-                                                          isDisabled={readOnly}
-                                                          error={attributesOffreErrors[index]?.valeur?.message}
-										                  {...register(`attributs_offres.${index}.valeur`)}
-                                        />
-                                    </React.Fragment>
-								))
-							}
+							<NextUiInputCustm type={"text"}
+							                  label={" "}
+							                  placeholder={"Valeur"}
+							                  isDisabled={readOnly}
+							                  error={attributesOffreErrors[0]?.valeur?.message}
+							                  {...register(`attributs_offres.${0}.valeur`)}
+							/>
 
 							<Button color={"primary"}
 							        className={"text-tertiary font-semibold flex-shrink-0"}
@@ -350,12 +372,40 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 
 						</div>
 
+						{
+							attributesOffres.length > 1 &&
+                            <div className={"w-full flex flex-wrap gap-2 p-2 rounded-xl bg-secondary"}>
+
+								{
+									attributesOffres.slice(1).map((att, index) => (
+
+										<div
+											className={"h-[5rem] aspect-[65/57] flex flex-col p-2 rounded-lg bg-tertiary"}
+											key={index}>
+											<XMarkIcon className={"size-4 stroke-custom_white cursor-pointer"}
+											           onClick={() => {
+												           removeAtt(index + 1)
+											           }}/>
+											<span
+												className={"text-foreground whitespace-nowrap overflow-hidden text-ellipsis"}>{att.nom}</span>
+											<span
+												className={"text-sm text-foreground font-extralight whitespace-nowrap overflow-hidden text-ellipsis"}>{att.valeur}</span>
+										</div>
+									))
+								}
+
+                            </div>
+						}
+
 					</div>
 
-					<div className={"w-full flex flex-col space-y-1"}>
-						<span className={"text-foreground font-normal"}>Logo</span>
-						<LogoImage onChange={files => setLogoImage(files[0])}/>
-					</div>
+					{
+						!isUpdate &&
+                        <div className={"w-full flex flex-col space-y-1"}>
+                            <span className={"text-foreground font-normal"}>Logo</span>
+                            <LogoImage onChange={files => setLogoImage(files[0])}/>
+                        </div>
+					}
 
 					<div className={"w-full flex flex-col space-y-1"}>
 						<span className={"text-foreground font-normal"}>Image descriptives</span>
@@ -363,7 +413,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 					</div>
 
 					<div className={"w-full flex justify-center"}>
-						<Button type={"submit"} isDisabled={isBusy || readOnly }>Ajouter</Button>
+						<Button type={"submit"} isDisabled={isBusy || readOnly}>Ajouter</Button>
 					</div>
 
 				</form>
@@ -379,19 +429,20 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 				<div className={"relative w-full h-1/2 rounded-2xl object-cover overflow-hidden"}>
 					{
 						!isUpdate ?
-						(
-							logoImage &&
-							<Image src={URL.createObjectURL(logoImage)}
-	                               alt={"Service Logo"}
-	                               fill
-	                        />
-						):
+							(
+								logoImage &&
+                                <Image src={URL.createObjectURL(logoImage)}
+                                       alt={"Service Logo"}
+                                       fill
+                                       className={"object-cover"}
+                                />
+							) :
 							(
 								service.logo &&
-								<Image src={service.logo}
-								       alt={"Service Logo"}
-								       fill
-								/>
+                                <Image src={service.logo}
+                                       alt={"Service Logo"}
+                                       fill
+                                />
 							)
 					}
 				</div>
@@ -442,7 +493,7 @@ export default function ServiceForm({ service, isUpdate }: ProductProps) {
 						)}>
 							{
 								isUpdate ?
-									( service.est_disponible ? "Disponible" : "Indisponible" ) :
+									(service.est_disponible ? "Disponible" : "Indisponible") :
 									"Disponible"
 							}
 						</span>

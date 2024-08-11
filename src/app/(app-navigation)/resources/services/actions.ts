@@ -84,7 +84,7 @@ export const addService = action(async (data: FormData): Promise<Service> => {
 	const service = validateResponse<Service>(content, ServiceSchema)
 
 	if (service) {
-		redirect('/resources/services')
+		// redirect('/resources/services')
 		return service
 	}
 	else {
@@ -200,7 +200,7 @@ export const updateService = action(async (id: number, data: any): Promise<Servi
 	const service = validateResponse<Product>(content, ServiceSchema)
 
 	if (service) {
-		redirect('/resources/services')
+		// redirect('/resources/services')
 		return service
 	}
 	else {

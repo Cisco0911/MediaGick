@@ -20,6 +20,17 @@ export function enumToArray(enumObj: any): { id: string; label: string }[] {
 		}));
 }
 
+// const createLabelsFromEnum = <T extends object>(enumType: T) => {
+// 	const labels: { [key: number]: string } = {};
+// 	for (const key in enumType) {
+// 		if (!isNaN(Number(key))) {
+// 			const value = enumType[key];
+// 			labels[value] = key.replace(/([A-Z])/g, ' $1').trim(); // Formatage du label
+// 		}
+// 	}
+// 	return labels;
+// };
+
 
 /**
  * Custom hook to manage a numeric value within a bounded range.
