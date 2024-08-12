@@ -69,7 +69,7 @@ export default function NewImageContent({resource, models}: NewImageContentProps
 				<div className={"flex items-center space-x-2.5"}>
 					<ArrowLongLeftIcon className={"size-6 fill-custom_white"}/>
 					<span className={"text-xl"}>
-						Création d'image
+						Création d&apos;image
 					</span>
 				</div>
 
