@@ -249,4 +249,33 @@ export const updateProduct = action(async (id: number, data: any): Promise<Produ
 
 })
 
+export const deleteProduct = action(async (id: number): Promise<void> => {
+	let res: Response
+	try {
+		const userSession = (await getUserSession());
+
+		// console.log(userSession)
+
+		res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/produits/${id}`, {
+			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${userSession.access_token}`
+			},
+		})
+	}
+	catch (err) {
+		console.log("Something went wrong", JSON.stringify(err), err)
+		throw new Error('Something went wrong')
+	}
+
+	const content: any = await res.json()
+
+	if (!res.ok) {
+		console.log(JSON.stringify(content))
+		throw new ClientError(`${content.detail}`)
+	}
+
+	return
+})
+
 

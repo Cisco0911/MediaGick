@@ -13,7 +13,8 @@ export default function SideBar()
 
 	const variants : Variants = {
 		open: {
-			width: "16.25rem",
+			width: "20rem",
+			// width: "16.25rem",
 			// transition: {
 			// 	when: "beforeChildren",
 			// }

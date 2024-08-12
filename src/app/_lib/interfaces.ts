@@ -39,7 +39,7 @@ export interface Product {
 	nature?: OfferNatureEnum;
 	id_createur: number | null;
 	logo: string | null;
-	images_offres: {id: number; chemin: string}[] | null;
+	images_offres: {id: number; chemin: string}[];
 	type?: typeof TypeProduct[keyof typeof TypeProduct];
 	id: number;
 	attributs_offres: Array<{

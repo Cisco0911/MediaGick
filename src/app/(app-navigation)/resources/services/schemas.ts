@@ -39,57 +39,80 @@ export const ServiceSchema = z.object({
 });
 
 export const AddServiceSchema = z.object({
-	libelle: z.string().min(1),
-	description: z.string().min(1),
-	telephone_marchand: z.string().min(1),
-	prix: z.coerce.number().positive(),
-	unite_prix: z.string().min(1),
-	devise_prix: z.coerce.number().positive(),
+	libelle: z.string()
+		.min(1, { message: "Le libellé est requis." }),
+	description: z.string()
+		.min(1, { message: "La description est requise." }),
+	telephone_marchand: z.string()
+		.min(8, { message: "Le numéro de téléphone doit contenir au moins 8 chiffres." }),
+	prix: z.coerce.number()
+		.min(1, { message: "Le prix doit être supérieur ou égal à 1." }),
+	unite_prix: z.string()
+		.min(1, { message: "L'unité de prix est requise." }),
+	devise_prix: z.coerce.number()
+		.min(1, { message: "La devise du prix est requise." }),
 	est_disponible: z.boolean().default(true),
-	nombre_jours_garantie: z.number().positive(),
-	duree: z.number().int().positive(),
-	lieu_prestation: z.string().min(1),
-	nature: z.coerce.number(),
-	// id_createur: z.number(),
-	// logo: z.string(),
-	// images_offres: z.array(z.any()), // Adjust type as needed
-	type: z.coerce.number(),
+	nombre_jours_garantie: z.number()
+		.min(1, { message: "Le nombre de jours de garantie doit être supérieur ou égal à 1." }),
+	duree: z.number()
+		.int()
+		.min(1, { message: "La durée doit être un nombre entier supérieur ou égal à 1." }),
+	lieu_prestation: z.string()
+		.min(1, { message: "Le lieu de prestation est requis." }),
+	nature: z.coerce.number()
+		.min(1, { message: "La nature est requise." }),
+	type: z.coerce.number()
+		.min(1, { message: "Le type est requis." }),
 	attributs_offres: z
 		.array(
 			z.object({
 				nom: z.string(),
-				valeur: z.string(),
+					// .min(1, { message: "Le nom de l'attribut est requis." }),
+				valeur: z.string()
+					// .min(1, { message: "La valeur de l'attribut est requise." }),
 			})
 		)
-		.nullable(),
+		.default([]),
 });
-export const AutoAddServiceSchema = z.object({
-	libelle: z.string().min(1),
-	telephone_marchand: z.string().min(1),
-	// id_createur: z.number(),
-	// logo: z.string(),
-	type_offre: z.coerce.number().positive(),
-	url: z.string().min(1),
-});
+// export const AutoAddServiceSchema = z.object({
+// 	libelle: z.string().min(1),
+// 	telephone_marchand: z.string().min(1),
+// 	// id_createur: z.number(),
+// 	// logo: z.string(),
+// 	type_offre: z.coerce.number().positive(),
+// 	url: z.string().min(1),
+// });
 
 
 export const UpdateServiceSchema = z.object({
-	libelle: z.string().min(1),
-	description: z.string().min(1),
-	telephone_marchand: z.string().min(1),
-	prix: z.coerce.number().positive(),
-	unite_prix: z.string().min(1),
-	devise_prix: z.coerce.number().positive(),
+	libelle: z.string()
+		.min(1, { message: "Le libellé est requis." }),
+	description: z.string()
+		.min(1, { message: "La description est requise." }),
+	telephone_marchand: z.string()
+		.min(8, { message: "Le numéro de téléphone doit contenir au moins 8 chiffres." }),
+	prix: z.coerce.number()
+		.min(0, { message: "Le prix doit être supérieur ou égal à 0." }),
+	unite_prix: z.string()
+		.min(1, { message: "L'unité de prix est requise." }),
+	devise_prix: z.coerce.number()
+		.min(1, { message: "La devise du prix est requise." }),
 	est_disponible: z.boolean().default(true),
-	nombre_jours_garantie: z.number().positive(),
-	duree: z.number().int().positive(),
-	lieu_prestation: z.string().min(1),
+	nombre_jours_garantie: z.number()
+		.min(1, { message: "Le nombre de jours de garantie doit être supérieur ou égal à 1." }),
+	duree: z.number()
+		.int()
+		.min(1, { message: "La durée doit être un nombre entier supérieur ou égal à 1." }),
+	lieu_prestation: z.string()
+		.min(1, { message: "Le lieu de prestation est requis." }),
 	attributs_offres: z
 		.array(
 			z.object({
 				nom: z.string(),
-				valeur: z.string(),
+					// .min(1, { message: "Le nom de l'attribut est requis." }),
+				valeur: z.string()
+					// .min(1, { message: "La valeur de l'attribut est requise." }),
 			})
 		)
-		.nullable(),
+		.default([]),
 });

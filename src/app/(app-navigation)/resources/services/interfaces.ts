@@ -5,7 +5,7 @@ import {TypeService} from "@app/(app-navigation)/resources/services/enums";
 export interface Service extends AddService{
 	id_createur?: number;
 	logo?: string;
-	images_offres?: string[];
+	images_offres?: {id: number; chemin: string}[];
 	id: number;
 }
 

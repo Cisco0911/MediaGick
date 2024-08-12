@@ -80,7 +80,7 @@ export default function DescriptiveImageDropZone({ children, onChange }: DropZon
 	]);
 
 	return (
-		<div className={"w-full flex space-x-2 overflow-x-auto"}>
+		<div className={"w-full flex space-x-2"}>
 			{
 				acceptedFiles
 					.map((file, index) => (

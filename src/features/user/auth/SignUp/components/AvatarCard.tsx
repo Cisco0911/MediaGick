@@ -1,6 +1,8 @@
+"use client"
+
 import {ReactNode, useState} from "react";
 import clsx from "clsx";
-import {motion} from "framer-motion";
+import {motion, Variants} from "framer-motion";
 
 
 type props = {
@@ -8,12 +10,24 @@ type props = {
 	label: string,
 	isActive: boolean,
 	activeColor: string,
+	activeOnHover?: boolean
 	rotate?: number
 	className?: string,
 }
 
 
-const AvatarCard = ({children, label, isActive, activeColor, rotate, className}: props) => {
+const AvatarCard = ({children, label, isActive, activeColor, activeOnHover = false, rotate, className}: props) => {
+
+	const variants: Variants = {
+		initial: {
+		},
+		hover: {
+			backgroundColor: activeOnHover ? activeColor : undefined,
+		},
+		active: {
+			backgroundColor: activeColor
+		}
+	}
 
 	const labelVariants = {
 		initial: {},
@@ -22,7 +36,7 @@ const AvatarCard = ({children, label, isActive, activeColor, rotate, className}:
 			fontWeight: "bold",
 			padding: "0 0.625rem 0 0.625rem",
 			borderRadius: "0.625rem",
-			backgroundColor: activeColor + "b2",
+			backgroundColor: activeOnHover ? undefined : activeColor + "b2",
 		},
 		active: {}
 	}
@@ -44,12 +58,12 @@ const AvatarCard = ({children, label, isActive, activeColor, rotate, className}:
 		<motion.div className={clsx(
 			"lg:size-56 md:size-44 size-28 md:rounded-3xl sm:rounded-2xl rounded-xl bg-secondary flex flex-col justify-end items-center",
 			className)}
-		     onMouseEnter={() => setState("hover")}
-		     onMouseLeave={() => setState("initial")}
-		            animate={isActive ? {backgroundColor: activeColor} : {}}
+		            whileHover={"hover"}
+		            variants={variants}
+		            animate={isActive ? "active" : state}
 		>
 			<motion.div className={"text-center md:text-3xl origin-top pointer-events-none"}
-			            animate={isActive ? "active" : state}
+			            // animate={isActive ? "active" : state}
 			            variants={labelVariants}
 			            transition={{duration: 0.4, backgroundColor: {duration: 0.1}}}
 			>
@@ -59,7 +73,7 @@ const AvatarCard = ({children, label, isActive, activeColor, rotate, className}:
 				"size-3/4 flex justify-center items-end pointer-events-none",
 				{"origin-bottom": !rotate}, {"origin-bottom-right": rotate && rotate > 0}, {"origin-bottom-left": rotate && rotate < 0}
 			)}
-			            animate={isActive ? "active" : state}
+			            // animate={isActive ? "active" : state}
 			            variants={childVariants}
 			            transition={isActive ? spring : {duration: 0.4}}
 			>

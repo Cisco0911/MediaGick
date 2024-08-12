@@ -19,7 +19,7 @@ export default function NavLink({ href, Icon, label }: props) {
 
 	const pathname = usePathname()
 
-	const isActive = pathname === href
+	const isActive = pathname.startsWith(href)
 
 	const variants: Variants = {
 		initial: {

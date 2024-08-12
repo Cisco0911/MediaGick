@@ -1,52 +1,41 @@
+"use client"
+
 import {XMarkIcon} from "@heroicons/react/24/outline";
 import InputFieldDefault from "@features/ui/components/InputFieldDefault";
 import React, {useState} from "react";
 import Button, {ButtonState} from "@features/ui/components/Button";
 import MyPopover from "@features/ui/components/MyPopover";
 import toast from "react-hot-toast";
-import {changePwd} from "@app/_lib/actions/auth";
-import {passwordSchema} from "@app/_lib/schemas";
-import {z} from "zod";
+import {updateInfo} from "@app/_lib/actions/auth";
+import {secteurActiviteSchema} from "@app/_lib/schemas";
 import {CircularProgress} from "@nextui-org/progress";
 import {PencilSquareIcon} from "@heroicons/react/24/solid";
-import {UserInfo} from "@app/_lib/interfaces";
+import {useRouter} from "next/navigation";
 
 
-type ChangePwdFormProps = {
+type ActivitySectorUpdateProps = {
 	// user: UserInfo
+	activitySector: string
 }
 
-export default function ChangePasswordForm() {
+export default function ActivitySectorUpdate({activitySector}: ActivitySectorUpdateProps) {
 
-	const [changePwdForm, setChangePwdForm] = useState(
-		{oldPassword: "", newPassword: "", confirmPassword: ""}
-	)
+	const router = useRouter()
+
+	const [newSector, setNewSector] = useState("")
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const {name, value} = e.target
-		setChangePwdForm({...changePwdForm, [name]: value})
+		setNewSector(e.target.value)
 	};
 
-	const confirmPwdSchema = z
-		.string({ required_error: "Veuillez confirmer votre mot de passe" })
-		.refine((val) => val === changePwdForm.newPassword, {
-			message: "Tu veux tromper qui ? 😒",
-			path: ["confirmPassword"],
-		})
-
-	const formValidation = z
-		.object({
-			oldPassword: passwordSchema,
-			newPassword: passwordSchema,
-			confirmPassword: confirmPwdSchema
-		})
+	const formValidation = secteurActiviteSchema
 
 
 	const [isOpen, setIsOpen] = useState(false)
 
 	const [pending, setPending] = useState(false)
 
-	const submitState: ButtonState = pending ? "busy" : (formValidation.safeParse(changePwdForm).success) ? "active" : "inactive";
+	const submitState: ButtonState = pending ? "busy" : (formValidation.safeParse(newSector).success) ? "active" : "inactive";
 	const BusyIcon = <CircularProgress classNames={{
 		svg: "h-[1.75rem]",
 		indicator: "stroke-tertiary"
@@ -59,12 +48,19 @@ export default function ChangePasswordForm() {
 
 			setPending(true);
 
-			const res = await changePwd(changePwdForm.oldPassword, changePwdForm.newPassword);
+			const res = await updateInfo({secteur_activite: newSector});
 
 			if (res && !res.ok){
 
 				toast.error(`${res.error}`);
 
+			}
+			else {
+
+				toast.success("Secteur d'activité mis a jour")
+				setIsOpen(false)
+
+				router.refresh()
 			}
 		}
 		catch (err) {
@@ -89,13 +85,13 @@ export default function ChangePasswordForm() {
 				className={"w-full flex justify-between text-xl cursor-pointer"}>
 
 				<span>
-					Mot de passe
+					Secteur d&apos;activité
 				</span>
 
 				<div className={"flex space-x-2"}>
 
 					<span>
-						***********
+						{activitySector}
 					</span>
 
 					<PencilSquareIcon
@@ -117,43 +113,19 @@ export default function ChangePasswordForm() {
 
 					<div className={"w-72 text-custom_white font-semibold text-xl text-center"}>
 							<span>
-								Changer le mot de passe
+								Modifier le Secteur d&apos;activité
 							</span>
 					</div>
 
 					<div className={"w-full"}>
-						<InputFieldDefault id={"OldPwdChangePwd"}
+						<InputFieldDefault id={"NameUpdate"}
 						                   type={"text"}
-						                   name={"oldPassword"}
-						                   value={changePwdForm.oldPassword}
+						                   name={"NameUpdate"}
+						                   value={newSector}
 						                   onChange={handleChange}
-						                   placeholder={"Ancien mot de passe"}
+						                   placeholder={"Entrer votre secteur d'activité"}
 						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
-						                   schema={passwordSchema}
-						/>
-					</div>
-
-					<div className={"w-full"}>
-						<InputFieldDefault id={"NewPwdChangePwd"}
-						                   type={"text"}
-						                   name={"newPassword"}
-						                   value={changePwdForm.newPassword}
-						                   onChange={handleChange}
-						                   placeholder={"Nouveau mot de passe"}
-						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
-						                   schema={passwordSchema}
-						/>
-					</div>
-
-					<div className={"w-full"}>
-						<InputFieldDefault id={"ConfirmPwdChangePwd"}
-						                   type={"text"}
-						                   name={"confirmPassword"}
-						                   value={changePwdForm.confirmPassword}
-						                   onChange={handleChange}
-						                   placeholder={"Confirmer le mot de passe"}
-						                   className={"w-full rounded-xl bg-tertiary/65 text-custom_white text-medium"}
-						                   schema={confirmPwdSchema}
+						                   schema={secteurActiviteSchema}
 						/>
 					</div>
 

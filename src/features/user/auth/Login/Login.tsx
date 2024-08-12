@@ -133,7 +133,7 @@ const Login: React.FC = () => {
 
 			<div className={"mt-7 cursor-pointer"}>
 				<Link className={"text-custom_white font-light text-sm underline"} href="/sign-up">
-					Vous n&apos;avez pas de compte ? Inscrivez-vous
+					Pas de compte ? Inscrivez-vous
 				</Link>
 			</div>
 

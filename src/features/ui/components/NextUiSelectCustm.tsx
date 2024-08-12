@@ -7,7 +7,7 @@ import {Select, SelectItem} from "@nextui-org/select";
 type NextUiSelectCustmProps = {
 	label: string,
 	placeholder: string,
-	itemArray: { [key: string]: number },
+	itemArray: { [key: string]: any },
 	disabled?: boolean,
 	error?: any,
 }

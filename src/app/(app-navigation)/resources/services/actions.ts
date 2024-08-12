@@ -54,27 +54,38 @@ export const getServices = action(async (): Promise<Service[]> => {
 
 })
 
-export const addService = action(async (data: FormData): Promise<Service> => {
+export const addService = action(async (data: FormData, imageOffres?: FormData): Promise<Service> => {
 	let res: Response
-	try {
-		const userSession = (await getUserSession());
 
-		// console.log(userSession)
+	const userSession = (await getUserSession());
 
-		res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/services`, {
+	// console.log(userSession)
+
+	res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/services`, {
+		method: 'POST',
+		headers: {
+			'Authorization': `Bearer ${userSession.access_token}`
+		},
+		body: data
+	})
+
+	let content: any = await res.json()
+
+	if (!res.ok) {
+		console.log(JSON.stringify(content))
+		throw new ClientError(`${content.detail}`)
+	}
+
+	if (imageOffres) {
+		res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/services/${content.id}/images`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${userSession.access_token}`
 			},
-			body: data
+			body: imageOffres
 		})
+		content = await res.json()
 	}
-	catch (err) {
-		console.log("Something went wrong", JSON.stringify(err), err)
-		throw new Error('Something went wrong')
-	}
-
-	const content: any = await res.json()
 
 	if (!res.ok) {
 		console.log(JSON.stringify(content))
@@ -207,4 +218,33 @@ export const updateService = action(async (id: number, data: any): Promise<Servi
 		throw new Error('Unmatched Schema')
 	}
 
+})
+
+export const deleteService = action(async (id: number): Promise<void> => {
+	let res: Response
+	try {
+		const userSession = (await getUserSession());
+
+		// console.log(userSession)
+
+		res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/services/${id}`, {
+			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${userSession.access_token}`
+			},
+		})
+	}
+	catch (err) {
+		console.log("Something went wrong", JSON.stringify(err), err)
+		throw new Error('Something went wrong')
+	}
+
+	const content: any = await res.json()
+
+	if (!res.ok) {
+		console.log(JSON.stringify(content))
+		throw new ClientError(`${content.detail}`)
+	}
+
+	return
 })

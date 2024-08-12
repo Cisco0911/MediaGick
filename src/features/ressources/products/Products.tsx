@@ -20,6 +20,10 @@ export default async function Products({ filters }: ProductsProps) {
 		products = res.data
 	}
 
+	if (!products){
+		products = []
+	}
+
 	return (
 		<div className={"grid-container"}>
 

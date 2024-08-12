@@ -7,7 +7,7 @@ import React from "react";
 
 export default function Layout({ children, }: { children: React.ReactNode }) {
 	return (
-		<div className={"w-screen min-h-[500px] h-screen flex backdrop-blur-md bg-black/50 overflow-hidden"}>
+		<div className={"w-screen min-h-[500px] h-screen flex overflow-hidden"}>
 
 			<SideBar />
 

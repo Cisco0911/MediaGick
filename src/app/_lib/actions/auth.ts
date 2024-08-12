@@ -7,6 +7,7 @@ import {parseToUser, parseToUserSession} from "@app/_lib/parsers";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 import {UserInfo} from "@app/_lib/interfaces";
+import {isEmpty} from "@nextui-org/shared-utils";
 
 
 const API_BASE_URL = process.env.API_BASE_URL
@@ -87,7 +88,12 @@ export const login = action(async (email: string, password: string) => {
 
 })
 
-export const getMe = action(async (accessToken: string) => {
+export const getMe = action(async (accessToken: string = "") => {
+
+	if (isEmpty(accessToken)) {
+		const userSession = (await getUserSession())
+		accessToken = userSession.access_token
+	}
 
 	let res: Response
 
@@ -305,6 +311,62 @@ export const changePwd = action(async (oldPwd: string, newPwd: string) => {
 	}
 
 	await logout()
+
+	return;
+
+})
+
+export const updateInfo = action(async (data) => {
+
+	let res: Response
+
+	const userSession = (await getUserSession());
+
+	try {
+
+		console.log("userSession", userSession.user.id)
+
+		res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${userSession.access_token}`
+			},
+			body: JSON.stringify(data),
+		})
+	} catch (err) {
+		throw new Error('Something went wrong')
+	}
+
+	const content: any = await res.json()
+
+	if (!res.ok) {
+		console.log(JSON.stringify(content))
+		throw new ClientError(`${content.detail}`)
+	}
+
+	// const meRes = await getMe(userSession.access_token)
+	//
+	// if (!meRes.ok){
+	// 	throw new ClientError(`${meRes.error}`)
+	// }
+	//
+	// const user = meRes.data
+	//
+	// cookies().delete("session");
+	//
+	// const newUserSession = {
+	// 	access_token: userSession.access_token,
+	// 	user
+	// }
+	//
+	// cookies().set("session", JSON.stringify(newUserSession), {
+	// 	httpOnly: true,
+	// 	secure: true,
+	// 	maxAge: await secondsFromNow(userSession.access_expiration),
+	// 	path: '/',
+	// })
+
 
 	return;
 

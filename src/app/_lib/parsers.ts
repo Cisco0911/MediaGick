@@ -47,7 +47,7 @@ export function parseToUserSession(userInfo: any) {
 
 export function parseToUser(userInfo: any) {
 
-	const user : User =  {
+	const user : UserInfo =  {
 		...userInfo,
 		publics_cibles: userInfo.publics_cibles.map((publics_cible: any) => publics_cible.libelle)
 	}

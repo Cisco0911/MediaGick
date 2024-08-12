@@ -100,54 +100,75 @@ export const ProductSchema = z.object({
 });
 
 export const AddProductSchema = z.object({
-	libelle: z.string(),
-	description: z.string(),
-	telephone_marchand: z.string(),
-	prix: z.number(),
-	unite_prix: z.string(),
-	devise_prix: z.coerce.number(),
+	libelle: z.string()
+		.min(1, { message: "Le libellé est requis." }),
+	description: z.string()
+		.min(1, { message: "La description est requise." }),
+	telephone_marchand: z.string()
+		.min(8, { message: "Le numéro de téléphone doit contenir au moins 8 chiffres." }),
+	prix: z.number()
+		.min(0, { message: "Le prix doit être supérieur ou égal à 0." }),
+	unite_prix: z.string()
+		.min(1, { message: "L'unité de prix est requise." }),
+	devise_prix: z.coerce.number()
+		.min(1, { message: "La devise du prix est requise." }),
 	est_disponible: z.boolean().default(true),
-	nombre_jours_garantie: z.number(),
-	qte_disponible: z.number(),
-	nature: z.coerce.number(),
-	// id_createur: z.number(),
-	// logo: z.string(),
-	// images_offres: z.array(z.any()), // Adjust type as needed
-	type: z.coerce.number(),
+	nombre_jours_garantie: z.number()
+		.min(1, { message: "Le nombre de jours de garantie doit être supérieur ou égal à 1." }),
+	qte_disponible: z.number()
+		.min(1, { message: "La quantité disponible doit être supérieure ou égale à 1." }),
+	nature: z.coerce.number()
+		.min(1, { message: "La nature est requise." }),
+	type: z.coerce.number()
+		.min(1, { message: "Le type est requis." }),
 	attributs_offres: z
 		.array(
 			z.object({
 				nom: z.string(),
-				valeur: z.string(),
+					// .min(1, { message: "Le nom de l'attribut est requis." }),
+				valeur: z.string()
+					// .min(1, { message: "La valeur de l'attribut est requise." }),
 			})
 		)
 		.default([])
 });
 export const AutoAddProductSchema = z.object({
-	telephone_marchand: z.string().min(1),
-	// id_createur: z.number(),
-	// logo: z.string(),
-	type_offre: z.coerce.number().positive(),
-	url: z.string().min(1),
+	telephone_marchand: z.string()
+		.min(1, { message: "Le numéro de téléphone du marchand est requis." }),
+	type_offre: z.coerce.number()
+		.positive({ message: "Le type d'offre doit être selectionné." }),
+	url: z.string()
+		.min(1, { message: "L'URL est requise." }),
 });
 
 
 export const UpdateProductSchema = z.object({
-	libelle: z.string(),
-	description: z.string(),
-	telephone_marchand: z.string(),
-	prix: z.number(),
-	unite_prix: z.string(),
-	devise_prix: z.coerce.number(),
-	est_disponible: z.boolean().default(true),
-	nombre_jours_garantie: z.number(),
-	qte_disponible: z.number(),
+	libelle: z.string()
+		.min(1, { message: "Le libellé est requis." }),
+	description: z.string()
+		.min(1, { message: "La description est requise." }),
+	telephone_marchand: z.string()
+		.min(10, { message: "Le numéro de téléphone doit contenir au moins 10 chiffres." }),
+	prix: z.number()
+		.min(0, { message: "Le prix doit être supérieur ou égal à 0." }),
+	unite_prix: z.string()
+		.min(1, { message: "L'unité de prix est requise." }),
+	devise_prix: z.coerce.number()
+		.min(1, { message: "La devise du prix est requise." }),
+	est_disponible: z.boolean(),
+	nombre_jours_garantie: z.number()
+		.min(1, { message: "Le nombre de jours de garantie doit être supérieur ou égal à 1." }),
+	qte_disponible: z.number()
+		.min(1, { message: "La quantité disponible doit être supérieure ou égale à 1." }),
 	attributs_offres: z
 		.array(
 			z.object({
 				nom: z.string(),
+					// .min(1, { message: "Le nom de l'attribut est requis." }),
 				valeur: z.string(),
-				id: z.number(),
+					// .min(1, { message: "La valeur de l'attribut est requise." }),
+				id: z.number()
+					// .min(1, { message: "L'ID de l'attribut est requis et doit être un nombre positif." }),
 			})
 		)
 		.nullable(),

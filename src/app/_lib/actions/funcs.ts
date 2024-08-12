@@ -1,4 +1,4 @@
-import {ZodError, ZodType} from "zod";
+import {ZodError, ZodSchema, ZodType} from "zod";
 
 
 export class ClientError extends Error {}
@@ -33,6 +33,16 @@ export async function validateResponse<T>(res: any, DataSchema: ZodType) {
 			console.error('Erreur inconnue:', error);
 		}
 		return null;
+	}
+}
+export async function validateData<T>(schema: ZodSchema<T>, data: unknown): Promise<T | null> {
+	const result = schema.safeParse(data);
+	if (result.success) {
+		console.log('Validation réussie');
+		return result.data; // Return the validated and typed data
+	} else {
+		console.error('Validation échouée:', result.error.errors);
+		return null; // Return null if validation fails
 	}
 }
 

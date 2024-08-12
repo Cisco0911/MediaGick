@@ -16,12 +16,13 @@ import {AddProductSchema, UpdateProductSchema} from "@app/_lib/schemas";
 import {useRef, useState} from "react";
 import {isEmpty} from "@nextui-org/shared-utils";
 import toast from "react-hot-toast";
-import {addProduct, updateProduct} from "@app/_lib/actions/fetchData";
+import {addProduct, deleteProduct, updateProduct} from "@app/_lib/actions/fetchData";
 import {Currency, CurrencyEnum, OfferNature, OfferNatureEnum, TypeProduct} from "@app/_lib/enums";
 import Image from "next/image";
 import React from "react";
 import {Chip} from "@nextui-org/chip";
 import {useRouter} from "next/navigation";
+import Link from "next/link";
 
 
 
@@ -36,7 +37,7 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 
 	const router = useRouter()
 
-	console.log(product)
+	// console.log(product)
 
 	const [readOnly, setReadOnly] = useState(isDisabled)
 
@@ -170,6 +171,34 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 
 	}
 
+	async function sup() {
+
+		let toastId = ""
+
+		try {
+
+			toastId = toast.loading("Suppression en cours...")
+
+			const res = await deleteProduct(product.id);
+			if (res && !res.ok) {
+				toast.dismiss(toastId)
+				toast.error(`${res.error}`);
+			}
+			else {
+				toast.dismiss(toastId)
+				toast.success("Produit supprimé avec succes")
+				setTimeout(() => {
+					router.push("/resources/products")
+				}, 1000)
+			}
+		}
+		catch (err) {
+			toast.dismiss(toastId)
+			console.log(err)
+			toast.error(`${err}`);
+		}
+	}
+
 	return (
 		<div className={clsx(
 			"w-full h-full flex justify-center items-center space-x-2.5"
@@ -196,17 +225,22 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 					isDisabled &&
 					<div className={"flex items-center space-x-4"}>
 
-						<Button className={"bg-custom_white text-lg text-black font-bold"}
-						        endContent={ <PaintBrushIcon className={"size-6 fill-black"} /> }
-						>
-							Créer un contenu
-						</Button>
+						<Link href={`/workshop/image-content/new/product/${product.id}`}>
+                            <Button className={"bg-custom_white text-lg text-black font-bold"}
+                                    endContent={ <PaintBrushIcon className={"size-6 fill-black"} /> }
+                            >
+                                Créer un contenu
+                            </Button>
+						</Link>
 						<Button color={"primary"}  className={"text-lg text-black font-bold"}
 						        onClick={ () => setReadOnly(!readOnly) }
 						>
 							{readOnly ? "Modifier" : "Annuler"}
 						</Button>
-						<Button color={"danger"}  className={"text-lg text-black font-bold"}>
+						<Button color={"danger"}
+						        className={"text-lg text-black font-bold"}
+						        onClick={sup}
+						>
 							Supprimer
 						</Button>
 
@@ -279,7 +313,7 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 						/>
 
 						<NextUiInputCustm type={"text"}
-						                  label={"Prix Unitaire"}
+						                  label={"Prix par"}
 						                  placeholder={"Par kg"}
 						                  isDisabled={readOnly}
 						                  error={errors?.unite_prix?.message}
@@ -380,7 +414,7 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 						<span className={"text-foreground font-normal"}>Image descriptives</span>
 						<div className={"w-full flex space-x-2 overflow-x-auto"}>
 							{
-								product.images_offres?.length &&
+								Boolean(product.images_offres.length) &&
                                 <div className={"w-full flex space-x-2"}>
 
 	                                {

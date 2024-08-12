@@ -15,14 +15,14 @@ import {AddProductSchema, UpdateProductSchema} from "@app/_lib/schemas";
 import {useRef, useState} from "react";
 import {isEmpty} from "@nextui-org/shared-utils";
 import toast from "react-hot-toast";
-import {addProduct, updateProduct} from "@app/_lib/actions/fetchData";
+import {addProduct, deleteProduct, updateProduct} from "@app/_lib/actions/fetchData";
 import {Currency, CurrencyEnum, OfferNature, OfferNatureEnum} from "@app/_lib/enums";
 import Image from "next/image";
 import React from "react";
 import {Chip} from "@nextui-org/chip";
 import {AddService, Service, UpdateService} from "@app/(app-navigation)/resources/services/interfaces";
 import {AddServiceSchema, UpdateServiceSchema} from "@app/(app-navigation)/resources/services/schemas";
-import {addService, updateService} from "@app/(app-navigation)/resources/services/actions";
+import {addService, deleteService, updateService} from "@app/(app-navigation)/resources/services/actions";
 import {TypeService} from "@app/(app-navigation)/resources/services/enums";
 import {useRouter} from "next/navigation";
 
@@ -65,6 +65,7 @@ export default function ServiceForm({ service, isUpdate = false }: ProductProps)
 
 	// console.log(attributesOffreErrors, attOffreIndex)
 	// console.log(errors)
+	console.log(service)
 
 	function addAtt()
 	{
@@ -92,6 +93,7 @@ export default function ServiceForm({ service, isUpdate = false }: ProductProps)
 	async function submit(data: any)
 	{
 		let formData = new FormData();
+		const imageOffres = new FormData();
 		let toastId: string = ""
 
 		data = isUpdate ? UpdateServiceSchema.safeParse(data) : AddServiceSchema.safeParse(data)
@@ -137,8 +139,9 @@ export default function ServiceForm({ service, isUpdate = false }: ProductProps)
 
 			if (descriptiveImages.current)
 			{
+				console.log("adding images", descriptiveImages.current)
 				for (let i = 0; i < descriptiveImages.current.length; i++) {
-					formData.append('images_offres', descriptiveImages.current[i])
+					imageOffres.append('images', descriptiveImages.current[i])
 				}
 			}
 		}
@@ -154,7 +157,7 @@ export default function ServiceForm({ service, isUpdate = false }: ProductProps)
 			setBusy(true);
 			toastId = toast.loading(isUpdate ? "Modification en cours..." : "Ajout en cours...");
 
-			const res = isUpdate ? await updateService(service.id, data) : await addService(formData);
+			const res = isUpdate ? await updateService(service.id, data) : await addService(formData, imageOffres);
 
 			if (res && !res.ok){
 
@@ -181,6 +184,34 @@ export default function ServiceForm({ service, isUpdate = false }: ProductProps)
 		}
 
 
+	}
+
+	async function sup() {
+
+		let toastId = ""
+
+		try {
+
+			toastId = toast.loading("Suppression en cours...")
+
+			const res = await deleteService(service.id);
+			if (res && !res.ok) {
+				toast.dismiss(toastId)
+				toast.error(`${res.error}`);
+			}
+			else {
+				toast.dismiss(toastId)
+				toast.success("Service supprimé avec succes")
+				setTimeout(() => {
+					router.push("/resources/services")
+				}, 1000)
+			}
+		}
+		catch (err) {
+			toast.dismiss(toastId)
+			console.log(err)
+			toast.error(`${err}`);
+		}
 	}
 
 	return (
@@ -219,7 +250,10 @@ export default function ServiceForm({ service, isUpdate = false }: ProductProps)
 						>
 							{readOnly ? "Modifier" : "Annuler"}
 						</Button>
-						<Button color={"danger"}  className={"text-lg text-black font-bold"}>
+						<Button color={"danger"}
+						        className={"text-lg text-black font-bold"}
+						        onClick={sup}
+						>
 							Supprimer
 						</Button>
 
@@ -292,8 +326,8 @@ export default function ServiceForm({ service, isUpdate = false }: ProductProps)
 						/>
 
 						<NextUiInputCustm type={"text"}
-						                  label={"Prix Unitaire"}
-						                  placeholder={"Par kg"}
+						                  label={"Prix par"}
+						                  placeholder={"Par jour"}
 						                  isDisabled={readOnly}
 						                  error={errors?.unite_prix?.message}
 						                  {...register("unite_prix")}
@@ -409,7 +443,47 @@ export default function ServiceForm({ service, isUpdate = false }: ProductProps)
 
 					<div className={"w-full flex flex-col space-y-1"}>
 						<span className={"text-foreground font-normal"}>Image descriptives</span>
-						<DescriptiveImageDropZone onChange={files => descriptiveImages.current = files}/>
+						<div className={"w-full flex space-x-2 overflow-x-auto"}>
+							{
+								service.images_offres?.length &&
+                                <div className={"w-full flex space-x-2"}>
+
+									{
+										service.images_offres.map((img, index) => (
+											<div
+												key={index}
+												className={clsx(
+													"group relative rounded-3xl overflow-hidden",
+													"w-[7rem] h-[7rem] bg-tertiary",
+													"flex-shrink-0 flex justify-center items-center"
+												)}
+											>
+												{/*<div className={clsx(*/}
+												{/*    "absolute z-10 w-full h-full top-0 left-0 backdrop-blur-xl bg-secondary/50",*/}
+												{/*    "hidden group-hover:flex justify-center items-center",*/}
+												{/*)}>*/}
+
+												{/*    <div className={"p-3 rounded-full "}*/}
+												{/*         onClick={() => removeFile(index)}*/}
+												{/*    >*/}
+												{/*        <XMarkIcon className={"size-8 stroke-custom_white"}/>*/}
+												{/*    </div>*/}
+
+												{/*</div>*/}
+												<Image src={img.chemin}
+												       alt={`Image descriptive ${index + 1}`}
+												       fill
+												       quality={100}
+													// className={"object-cover"}
+												/>
+											</div>
+										))
+									}
+
+                                </div>
+							}
+							<DescriptiveImageDropZone onChange={files => descriptiveImages.current = files}/>
+						</div>
 					</div>
 
 					<div className={"w-full flex justify-center"}>
