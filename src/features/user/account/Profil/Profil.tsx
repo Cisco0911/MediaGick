@@ -116,7 +116,9 @@ export default function Profil({user}: ProfilProps) {
 						variant={"secondary"}
 						state={pending ? "busy" : "active"}
 						onClick={_logout}
-						children={"Se deconnecter"}/>
+					>
+						Se deconnecter
+					</Button>
 
 				</div>
 			</div>
