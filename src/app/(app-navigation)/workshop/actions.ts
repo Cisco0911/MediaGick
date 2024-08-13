@@ -42,3 +42,25 @@ export const getModels = action(async () : Promise<ModelContenu[]> => {
 	}
 
 })
+
+export const getModel = action(async (id: number) : Promise<ModelContenu> => {
+
+	const userSession = (await getUserSession());
+
+	const res = await fetch(`${API_BASE_URL}/api/v1/modeles-contenus/${id}`, {
+		method: 'GET',
+		headers: {
+			// 'Content-Type': 'application/json',
+			'Authorization': `Bearer ${userSession.access_token}`
+		},
+	})
+
+	const content: any = await res.json()
+
+	if (!res.ok) {
+		console.log('Erreur', JSON.stringify(content));
+		throw new ClientError(`${content.detail}`)
+	}
+
+	return await validateData<ModelContenu>(ModelContenuSchema, content)
+})

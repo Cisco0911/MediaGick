@@ -9,7 +9,7 @@ export interface ModelContenu {
 	longueur: number;
 	duree_secondes: number;
 	source: 0 | 1; // Only allowed values are 0 or 1
-	vignette?: string;
+	vignette: string;
 	id: string;
 	etiquettes_modeles: EtiquetteModel[];
 	elements_modeles: ElementModel[];

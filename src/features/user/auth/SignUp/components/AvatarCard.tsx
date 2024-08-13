@@ -58,7 +58,7 @@ const AvatarCard = ({children, label, isActive, activeColor, activeOnHover = fal
 		<motion.div className={clsx(
 			"lg:size-56 md:size-44 size-28 md:rounded-3xl sm:rounded-2xl rounded-xl bg-secondary flex flex-col justify-end items-center",
 			className)}
-		            whileHover={"hover"}
+		            whileHover={isActive ? "active" : "hover"}
 		            variants={variants}
 		            animate={isActive ? "active" : state}
 		>

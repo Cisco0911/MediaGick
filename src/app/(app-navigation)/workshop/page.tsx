@@ -17,7 +17,7 @@ export default function WorkshopPage() {
 			<div className={"bg-transparent"}>
 				<div className="relative m-0.5 flex justify-center items-center space-x-10">
 
-					<Link href="image-content">
+					<Link href="/workshop/image-content">
 						<AvatarCard label={"Image"}
 						            isActive={false}
 						            activeColor={"#ffffff"}
@@ -34,7 +34,7 @@ export default function WorkshopPage() {
 						</AvatarCard>
 					</Link>
 
-					<Link href="video-content">
+					<Link href="/workshop/video-content">
 						<AvatarCard
 							label={"Vidéo"}
 							isActive={false}

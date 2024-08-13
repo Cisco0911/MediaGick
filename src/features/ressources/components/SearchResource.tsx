@@ -5,7 +5,12 @@ import {useState} from "react";
 import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 
 
-export default function SearchResource() {
+
+type SearchResourceProps = {
+
+}
+
+export default function SearchResource({}: SearchResourceProps) {
 
 	const [searchProduct, setSearchProduct] = useState("")
 

@@ -12,7 +12,7 @@ export const ModelContenuSchema = z.object({
 	longueur: z.number(),
 	duree_secondes: z.number(),
 	source: z.union([z.literal(0), z.literal(1)]), // Only 0 or 1 allowed
-	vignette: z.string().optional(),
+	vignette: z.string(),
 	id: z.string(),
 	etiquettes_modeles: z.array(
 		z.object({

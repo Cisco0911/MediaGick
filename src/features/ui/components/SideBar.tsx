@@ -36,19 +36,19 @@ export default function SideBar()
 		            initial={false}
 		            animate={open ? "open" : "closed"}
 		            // whileHover={"open"}
-		            transition={{
-						type: "spring",
-			            stiffness: 700,
-			            damping: 30,
-			            // mass: 0.7
-		            }}
+		            // transition={{
+					// 	type: "spring",
+			        //     stiffness: 700,
+			        //     damping: 30,
+			        //     // mass: 0.7
+		            // }}
 		            onMouseEnter={ () => setOpen(true) }
 		            onMouseLeave={ () => setOpen(false) }
 		>
 
 			{/*<div className={"invisible bg-amber-300 size-8 px-2.5 box-content"} />*/}
 
-			<div className={"absolute top-0 left-0 w-full h-full bg-[#0e191e] px-5 py-2.5 space-y-28"}>
+			<div className={"absolute top-0 left-0 w-full h-full bg-[#0e191e] px-5 py-2.5 space-y-52"}>
 
 				<div>
 					<NavBarItemLayout>
@@ -81,9 +81,9 @@ export default function SideBar()
 
 				</div>
 
-				<div>
-					<CreditButton isNavOpen={open} />
-				</div>
+				{/*<div>*/}
+				{/*	<CreditButton isNavOpen={open} />*/}
+				{/*</div>*/}
 
 				<div>
 					<LogoutButton />

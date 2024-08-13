@@ -10,19 +10,30 @@ import React from "react";
 import {FieldErrors, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {AddImageContentFormSchema} from "@app/(app-navigation)/workshop/image-content/new/schemas";
-import {AddImageContentForm} from "@app/(app-navigation)/workshop/image-content/new/interfaces";
+import {
+	AddImageContentForm,
+	AddImageContentPostData
+} from "@app/(app-navigation)/workshop/image-content/new/interfaces";
 import NextUiInputCustm from "@features/ui/components/NextUiInputCustm";
 import Button from "@features/ui/components/Button";
 import {ArrowLongLeftIcon} from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
+import {addProduct} from "@app/_lib/actions/fetchData";
+import {addImageContent} from "@app/(app-navigation)/workshop/image-content/actions";
+import {useRouter} from "next/navigation";
+import Image from "next/image";
+import {isValidURL} from "@app/_lib/actions/funcs";
+import Link from "next/link";
 
 
 type NewImageContentProps = {
 	resource: Product | Service,
+	resource_type: string,
 	models: ModelContenu[]
 }
 
 
-export default function NewImageContent({resource, models}: NewImageContentProps) {
+export default function NewImageContent({resource, resource_type, models}: NewImageContentProps) {
 
 	const {
 		register,
@@ -34,7 +45,9 @@ export default function NewImageContent({resource, models}: NewImageContentProps
 		resolver: zodResolver(AddImageContentFormSchema),
 	});
 
-	console.log(models[0])
+	const router = useRouter()
+
+	// console.log(models[2])
 
 	const modelsOptions = models.reduce((acc, model) => {
 		acc[model.nom] = model.id;
@@ -48,7 +61,48 @@ export default function NewImageContent({resource, models}: NewImageContentProps
 	const selectedModel = models.find( model => model.id === selectedModelId );
 
 	async function onValid(data: AddImageContentForm) {
-		console.log(data)
+		const postData: AddImageContentPostData = {
+			...data,
+			id_offre: resource.id,
+			type_offre: resource_type === "product" ? 1 : 2,
+		}
+		console.log(postData)
+
+		let toastId = ""
+
+		try {
+
+			// setBusy(true);
+			toastId = toast.loading('Ajout du contenu...');
+
+			const res = await addImageContent(postData);
+
+			if (res && !res.ok){
+
+				toast.error(`${res.error}`);
+
+				toast.dismiss(toastId)
+				// setBusy(false);
+			}
+			else {
+
+				toast.dismiss(toastId)
+				toast.success("Contenu ajouté avec succes")
+				console.log(res)
+
+				// setTimeout(() => {
+				// 	router.push("/workshop/image-content")
+				// }, 1000)
+				// setBusy(false);
+			}
+		}
+		catch (err) {
+			toast.dismiss(toastId)
+			console.log(err)
+			toast.error(`${err}`);
+
+			// setBusy(false);
+		}
 	}
 	function onInvalid(errors: FieldErrors<AddImageContentForm>) {
 		console.log(errors)
@@ -66,12 +120,12 @@ export default function NewImageContent({resource, models}: NewImageContentProps
 			      // }}
 			>
 
-				<div className={"flex items-center space-x-2.5"}>
+				<Link href={"/workshop/image-content"} className={"flex items-center space-x-2.5"}>
 					<ArrowLongLeftIcon className={"size-6 fill-custom_white"}/>
 					<span className={"text-xl"}>
 						Création d&apos;image
 					</span>
-				</div>
+				</Link>
 
 				<div className={"w-full"}>
 					<NextUiSelectCustm label={"Choix du modele"}
@@ -87,7 +141,7 @@ export default function NewImageContent({resource, models}: NewImageContentProps
 						Apercu du Modèle
 					</span>
 					<div className={clsx(
-							"rounded-xl bg-secondary/50 text-custom_white/50",
+							"relative rounded-xl bg-secondary/50 text-custom_white/50",
 							"flex justify-center items-center overflow-hidden",
 						)}
 					     style={{
@@ -95,7 +149,14 @@ export default function NewImageContent({resource, models}: NewImageContentProps
 						     aspectRatio: (selectedModel?.largeur || 1.5) / (selectedModel?.longueur || 1)
 					     }}
 					>
-						Apercu
+						{
+							selectedModel && isValidURL(selectedModel.vignette) ?
+								<Image src={selectedModel.vignette}
+								       alt={"Apercu du Modèle"}
+								       fill
+								       className={"object-cover"}
+								/> : "Apercu"
+						}
 					</div>
 				</div>
 

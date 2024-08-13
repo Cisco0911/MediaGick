@@ -23,7 +23,7 @@ type NewContentPageProps = {
 
 export default async function NewContentPage({ params }: NewContentPageProps) {
 
-	console.log(params)
+	// console.log(params)
 
 	let res : {   ok: false, error: string } | {   ok: true, data: Product | Service }
 	if (params.resourceType === "product") {
@@ -55,7 +55,7 @@ export default async function NewContentPage({ params }: NewContentPageProps) {
 
 	return (
 		<div className="w-full h-full">
-			<NewImageContent resource={resource} models={models.data} />
+			<NewImageContent resource={resource} resource_type={params.resourceType} models={models.data} />
 		</div>
 	)
 }
