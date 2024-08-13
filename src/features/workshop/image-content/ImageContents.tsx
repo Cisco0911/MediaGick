@@ -68,25 +68,23 @@ export default function ImageContents({imageContents}: ImageContentsProps) {
 						>
 							<Button variant={"secondary"}
 							        className={"w-fit px-2 py-2 rounded-xl bg-custom_white text-lg font-semibold"}
-							        style={{
-								        pointerEvents: selected === -1 ? "none" : "auto"
-							        }}
-							        state={deleteState}
-							        busyIcon={
-								        <CircularProgress classNames={{
-									        svg: "h-[1.75rem]",
-									        indicator: "stroke-tertiary"
-								        }} />
-							        }
-							        onClick={deleteImageContent}
-
 							>
 								<PencilIcon className={"size-8 fill-tertiary"}/>
 							</Button>
 						</Link>
 						<Button variant={"secondary"}
 						        className={"w-fit px-2 py-2 rounded-xl bg-custom_white text-lg font-semibold"}
-
+						        style={{
+							        pointerEvents: selected === -1 ? "none" : "auto"
+						        }}
+						        state={deleteState}
+						        busyIcon={
+							        <CircularProgress classNames={{
+								        svg: "h-[1.75rem]",
+								        indicator: "stroke-tertiary"
+							        }} />
+						        }
+						        onClick={deleteImageContent}
 						        >
 							<XMarkIcon className={"size-8 fill-tertiary"}/>
 						</Button>
