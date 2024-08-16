@@ -2,6 +2,7 @@ import ResourceCard from "@features/ressources/components/ResourceCard";
 import React from "react";
 import {getServices} from "@app/(app-navigation)/resources/services/actions";
 import {Service} from "@app/(app-navigation)/resources/services/interfaces";
+import {isEmpty} from "@nextui-org/shared-utils";
 
 
 type ProductsProps = {
@@ -18,6 +19,14 @@ export default async function Services({ filters }: ProductsProps) {
 	let services: Service[] = []
 	if (res && res.ok) {
 		services = res.data
+	}
+
+	if (isEmpty(services)){
+		return (
+			<div className={"w-full h-full flex justify-center items-center"}>
+				<p>Aucun service ajouté</p>
+			</div>
+		)
 	}
 
 	return (

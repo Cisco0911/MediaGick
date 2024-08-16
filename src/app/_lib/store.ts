@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from '@app/_lib/reduxSlices/userSlice'
-import resourcesReducer from "@app/_lib/reduxSlices/resourcesSlice";
+import addVideoContentReducer from "@app/_lib/reduxSlices/addVideoContentSlice";
 
 export const makeStore = () => {
 	return configureStore({
 		reducer: {
 			userState: userReducer,
-			resourcesState: resourcesReducer
+			addVideoContentState: addVideoContentReducer
 		},
 		devTools: true
 	})

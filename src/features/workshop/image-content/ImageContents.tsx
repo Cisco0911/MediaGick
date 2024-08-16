@@ -3,7 +3,7 @@
 import {ImageContent} from "@app/(app-navigation)/workshop/image-content/interfaces";
 import ImageContentCard from "@features/workshop/image-content/components/ImageContentCard";
 import React, {useState} from "react";
-import SearchImageContent from "@features/workshop/image-content/components/SearchImageContent";
+import SearchContent from "@features/workshop/components/SearchContent";
 import {PencilIcon, PhotoIcon} from "@heroicons/react/24/solid";
 import Button, {ButtonState} from "@features/ui/components/Button";
 import {XMarkIcon} from "@heroicons/react/24/outline";
@@ -50,7 +50,7 @@ export default function ImageContents({imageContents}: ImageContentsProps) {
 
 			<div className={"w-full flex-shrink-0 flex flex-col space-y-5"}>
 				<div className={"w-full flex justify-center"}>
-					<SearchImageContent items={imageContents} />
+					<SearchContent items={imageContents} />
 				</div>
 				<div className={"flex flex-col space-y-2"}>
 

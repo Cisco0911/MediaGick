@@ -24,6 +24,7 @@ import {useRouter} from "next/navigation";
 import Image from "next/image";
 import {isValidURL} from "@app/_lib/actions/funcs";
 import Link from "next/link";
+import {ListenCreateContent} from "@app/_lib/taskSubjects";
 
 
 type NewImageContentProps = {
@@ -35,6 +36,7 @@ type NewImageContentProps = {
 
 export default function NewImageContent({resource, resource_type, models}: NewImageContentProps) {
 
+	// console.log("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
 	const {
 		register,
 		handleSubmit,
@@ -67,6 +69,7 @@ export default function NewImageContent({resource, resource_type, models}: NewIm
 			type_offre: resource_type === "product" ? 1 : 2,
 		}
 		console.log(postData)
+		// return
 
 		let toastId = ""
 
@@ -77,6 +80,7 @@ export default function NewImageContent({resource, resource_type, models}: NewIm
 
 			const res = await addImageContent(postData);
 
+			console.log(res)
 			if (res && !res.ok){
 
 				toast.error(`${res.error}`);
@@ -87,7 +91,8 @@ export default function NewImageContent({resource, resource_type, models}: NewIm
 			else {
 
 				toast.dismiss(toastId)
-				toast.success("Contenu ajouté avec succes")
+				toast("Creation du contenu en cours...")
+				ListenCreateContent.next()
 				console.log(res)
 
 				// setTimeout(() => {
@@ -168,7 +173,7 @@ export default function NewImageContent({resource, resource_type, models}: NewIm
 					                  error={errors?.hauteur?.message}
 					                  {...register("hauteur", {valueAsNumber: true})}
 					/>
-					<NextUiInputCustm type={"text"}
+					<NextUiInputCustm type={"number"}
 					                  label={"Largeur"}
 					                  placeholder={"1080"}
 					                  error={errors?.largeur?.message}

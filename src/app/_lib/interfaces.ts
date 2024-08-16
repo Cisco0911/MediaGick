@@ -48,3 +48,26 @@ export interface Product {
 		id: number;
 	}>
 }
+
+
+interface ErrorDetail {
+	type: string;
+	message: string;
+	details: string;
+}
+
+interface TaskStatusFailed {
+	task_id: string;
+	status: "failed";
+	error: ErrorDetail;
+}
+
+interface TaskStatusProcessing {
+	task_id: string;
+	status: "Processing";
+	error: never;
+}
+
+export type TaskStatus = TaskStatusFailed | TaskStatusProcessing;
+
+

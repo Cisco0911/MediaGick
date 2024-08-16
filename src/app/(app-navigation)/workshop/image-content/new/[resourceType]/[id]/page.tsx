@@ -5,6 +5,7 @@ import {Product} from "@app/_lib/interfaces";
 import {Service} from "@app/(app-navigation)/resources/services/interfaces";
 import {getService} from "@app/(app-navigation)/resources/services/actions";
 import {getModels} from "@app/(app-navigation)/workshop/actions";
+import TaskResponseDisplay from "@features/ui/components/TaskResponseDisplay";
 
 
 
@@ -56,6 +57,8 @@ export default async function NewContentPage({ params }: NewContentPageProps) {
 	return (
 		<div className="w-full h-full">
 			<NewImageContent resource={resource} resource_type={params.resourceType} models={models.data} />
+
+			{/*<TaskResponseDisplay />*/}
 		</div>
 	)
 }

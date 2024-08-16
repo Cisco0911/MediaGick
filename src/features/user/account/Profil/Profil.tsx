@@ -20,6 +20,7 @@ type ProfilProps = {
 export default function Profil({user}: ProfilProps) {
 
 
+	console.log(user)
 
 	const [pending, setPending] = React.useState(false);
 	const _logout = async (e: React.MouseEvent<HTMLButtonElement>) => {

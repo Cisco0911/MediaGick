@@ -9,10 +9,11 @@ import React, {forwardRef} from "react";
 
 type NextUiInputCustmProps = {
 	error?: any,
+	customInputClass?: string
 } & React.ComponentProps<typeof Textarea>
 
 const NextUiTextAreaCustm = forwardRef<HTMLTextAreaElement, NextUiInputCustmProps>(
-	({ error, ...props }, ref) => {
+	({ error, customInputClass, ...props }, ref) => {
 		return (
 			<>
 				<Textarea
@@ -24,6 +25,7 @@ const NextUiTextAreaCustm = forwardRef<HTMLTextAreaElement, NextUiInputCustmProp
 							"bg-transparent",
 							"text-white/90",
 							"placeholder:text-white/60",
+							customInputClass
 						],
 						innerWrapper: "bg-transparent",
 						inputWrapper: [

@@ -7,17 +7,19 @@ import {ImageContent} from "@app/(app-navigation)/workshop/image-content/interfa
 import {getUserSession} from "@app/_lib/actions/auth";
 import {ImageContentSchema} from "@app/(app-navigation)/workshop/image-content/schemas";
 import {z} from "zod"
+import {VideoContentSchema} from "@app/(app-navigation)/workshop/video-content/schemas";
+import {VideoContent} from "@app/(app-navigation)/workshop/video-content/interfaces";
 
 
 const API_BASE_URL = process.env.API_BASE_URL
 
 
 
-export const getImageContents = action(async () : Promise<ImageContent[]> => {
+export const getVideoContents = action(async () : Promise<VideoContent[]> => {
 
 	const userSession = await getUserSession()
 
-	const res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/contenus/images`, {
+	const res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/contenus/videos`, {
 		method: 'GET',
 		headers: {
 			// 'Content-Type': 'application/json',
@@ -31,11 +33,11 @@ export const getImageContents = action(async () : Promise<ImageContent[]> => {
 		throw new ClientError(content.detail)
 	}
 
-	return await validateData<ImageContent[]>(z.array(ImageContentSchema), content)
+	return await validateData<VideoContent[]>(z.array(VideoContentSchema), content)
 
 })
 
-export const getImageContent = action(async (id: number) : Promise<ImageContent> => {
+export const getVideoContent = action(async (id: number) : Promise<ImageContent> => {
 
 	const userSession = await getUserSession()
 
@@ -57,7 +59,7 @@ export const getImageContent = action(async (id: number) : Promise<ImageContent>
 
 })
 
-export const addImageContent = action(async (data: AddImageContentPostData) : Promise<void> => {
+export const addVideoContent = action(async (data: AddImageContentPostData) : Promise<void> => {
 
 	const userSession = await getUserSession()
 
@@ -79,7 +81,7 @@ export const addImageContent = action(async (data: AddImageContentPostData) : Pr
 	return content
 })
 
-export const updateImageContent = action(async (prompt: string, id: number) : Promise<ImageContent> => {
+export const updateVideoContent = action(async (prompt: string, id: number) : Promise<ImageContent> => {
 
 	const userSession = await getUserSession()
 
@@ -102,7 +104,7 @@ export const updateImageContent = action(async (prompt: string, id: number) : Pr
 
 })
 
-export const resetImageContent = action(async (id: number) : Promise<ImageContent> => {
+export const resetVideoContent = action(async (id: number) : Promise<ImageContent> => {
 
 	const userSession = await getUserSession()
 
@@ -124,7 +126,7 @@ export const resetImageContent = action(async (id: number) : Promise<ImageConten
 
 })
 
-export const deleteImageContentById = action(async (id: number) : Promise<void> => {
+export const deleteVideoContentById = action(async (id: number) : Promise<void> => {
 
 	const userSession = await getUserSession()
 

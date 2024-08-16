@@ -4,6 +4,8 @@ import {Providers} from "@app/Providers";
 import React from "react";
 import {Toaster} from "react-hot-toast";
 import { Inter } from "next/font/google";
+import {getWsURL} from "@app/_lib/actions/auth";
+import TaskResponseDisplay from "@features/ui/components/TaskResponseDisplay";
 
 
 const font = Inter({
@@ -18,11 +20,13 @@ export const metadata: Metadata = {
   description: "Your Media Magick Platform",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
 
 	return (
 		<html lang={"fr"} className={font.className}>

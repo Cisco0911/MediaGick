@@ -5,16 +5,17 @@ import clsx from "clsx";
 import {motion} from "framer-motion";
 import {formatDateLabel} from "@app/_lib/actions/funcs";
 import {HashtagIcon} from "@heroicons/react/24/outline";
+import {VideoContent} from "@app/(app-navigation)/workshop/video-content/interfaces";
 
 
-type ImageContentCardProps = {
-	content: ImageContent,
+type VideoContentCardProps = {
+	content: VideoContent,
 	isSelected: boolean,
 	onClick: () => void
 }
 
 
-export default function ImageContentCard({content, isSelected = false, onClick}: ImageContentCardProps) {
+export default function VideoContentCard({content, isSelected = false, onClick}: VideoContentCardProps) {
 
 
 	return (

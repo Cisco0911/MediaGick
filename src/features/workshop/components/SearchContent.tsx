@@ -4,13 +4,14 @@ import InputFieldDefault from "@features/ui/components/InputFieldDefault";
 import {useState} from "react";
 import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 import {ImageContent} from "@app/(app-navigation)/workshop/image-content/interfaces";
+import {VideoContent} from "@app/(app-navigation)/workshop/video-content/interfaces";
 
 
 interface SearchImageContentProps {
-	items?: ImageContent[]
+	items?: ImageContent[] | VideoContent[]
 }
 
-export default function SearchImageContent({items}: SearchImageContentProps) {
+export default function SearchContent({items}: SearchImageContentProps) {
 
 	const [searchKeyWord, setSearchKeyWord] = useState("")
 

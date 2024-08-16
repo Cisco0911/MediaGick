@@ -95,6 +95,8 @@ export const getMe = action(async (accessToken: string = "") => {
 		accessToken = userSession.access_token
 	}
 
+	console.log(accessToken)
+
 	let res: Response
 
 	try {
@@ -186,12 +188,17 @@ export const signUp = action(async (user: signUpSchema)=> {
 
 export async function getUserSession(){
 
-	const session: {
-		access_token: string;
-		user: UserInfo;
-	} = JSON.parse(cookies().get("session")!.value);
+	try {
+		const session: {
+			access_token: string;
+			user: UserInfo;
+		} = JSON.parse(cookies().get("session")!.value);
 
-	return session
+		return session
+	}
+	catch (err) {
+		redirect("/login")
+	}
 }
 
 export const getNewAccessToken = action(async (refreshToken: string) => {
@@ -372,3 +379,10 @@ export const updateInfo = action(async (data) => {
 
 })
 
+export async  function getWsURL(){
+
+	const userSession = (await getUserSession())
+	const endpoint = "/ws/create_contenu_image"
+
+	return `ws://mediagick-api-d8a99c6c2bd2.herokuapp.com${endpoint}/${userSession.user.id}?token=${userSession.access_token}`
+}
