@@ -195,7 +195,7 @@ export default function NewProductPage() {
 							<LogoImage onChange={files => logoImage.current = files[0]}/>
 						</div>
 
-						<div className={"relative w-full flex-shrink-0 flex justify-safe-center overflow-x-auto overflow-y-hidden"}>
+						<div className={"relative w-full flex-shrink-0 flex space-x-5 justify-safe-center overflow-x-auto overflow-y-hidden"}>
 
 							{/*<div className={"invisible"}>*/}
 							{/*	<AmazonCard domain={""} />*/}
@@ -207,7 +207,7 @@ export default function NewProductPage() {
 										// className={`absolute top-0`}
 										style={{
 											// left: `${i * 1.2 * 100/partenerLogos.length}%`
-											marginLeft: i == 0 ? 0 : -80
+											// marginLeft: i == 0 ? 0 : -80
 										}}
 									>
 										{logo}

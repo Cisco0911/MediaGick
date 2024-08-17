@@ -456,7 +456,7 @@ export default function ProductForm({ product, isDisabled }: ProductProps) {
 					</div>
 
 					<div className={"w-full flex justify-center"}>
-						<Button type={"submit"} isDisabled={isBusy || readOnly}>Ajouter</Button>
+						<Button type={"submit"} isDisabled={isBusy || readOnly}>Modifier</Button>
 					</div>
 
 				</form>

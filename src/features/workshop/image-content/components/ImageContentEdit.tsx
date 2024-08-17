@@ -81,16 +81,16 @@ export default function ImageContentEdit({imageContent}: ImageContentEditProps) 
 					</span>
 			</Link>
 
-			<div className={"w-full flex flex-col items-center space-y-5"}>
+			<div className={"w-full flex-grow flex flex-col items-center space-y-5"}>
 				<div className={"flex justify-center items-center space-x-2"}>
 					<span className={"font-semibold text-2xl"}>
 						Bien à louer
 					</span>
 					<PhotoIcon className={"size-7 fill-primary"}/>
 				</div>
-				<div className={"w-3/5"}>
+				<div className={"flex-grow"}>
 					<div
-						className={"relative w-full rounded-2xl overflow-hidden"}
+						className={"relative h-full rounded-2xl overflow-hidden"}
 						style={{
 							aspectRatio: image.largeur / image.hauteur
 						}}
