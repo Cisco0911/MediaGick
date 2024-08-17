@@ -9,7 +9,7 @@ export default async function ImageContentPage() {
 
 	const res = await getImageContents()
 
-	// console.log(res)
+	console.log(res)
 
 	if(!res || !res.ok) {
 		return (

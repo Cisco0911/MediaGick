@@ -8,7 +8,7 @@ import {getUserSession} from "@app/_lib/actions/auth";
 import {ImageContentSchema} from "@app/(app-navigation)/workshop/image-content/schemas";
 import {z} from "zod"
 import {VideoContentSchema} from "@app/(app-navigation)/workshop/video-content/schemas";
-import {VideoContent} from "@app/(app-navigation)/workshop/video-content/interfaces";
+import {AddVideoContent, VideoContent} from "@app/(app-navigation)/workshop/video-content/interfaces";
 
 
 const API_BASE_URL = process.env.API_BASE_URL
@@ -59,11 +59,11 @@ export const getVideoContent = action(async (id: number) : Promise<ImageContent>
 
 })
 
-export const addVideoContent = action(async (data: AddImageContentPostData) : Promise<void> => {
+export const addVideoContent = action(async (data: AddVideoContent) : Promise<void> => {
 
 	const userSession = await getUserSession()
 
-	const res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/contenus/images`, {
+	const res = await fetch(`${API_BASE_URL}/api/v1/createurs/${userSession.user.id}/contenus/videos`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

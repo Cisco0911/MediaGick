@@ -384,5 +384,5 @@ export async  function getWsURL(){
 	const userSession = (await getUserSession())
 	const endpoint = "/ws/create_contenu_image"
 
-	return `ws://mediagick-api-d8a99c6c2bd2.herokuapp.com${endpoint}/${userSession.user.id}?token=${userSession.access_token}`
+	return `wss://mediagick-api-d8a99c6c2bd2.herokuapp.com${endpoint}/${userSession.user.id}?token=${userSession.access_token}`
 }

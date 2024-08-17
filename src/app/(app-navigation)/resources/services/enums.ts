@@ -12,7 +12,7 @@ export enum TypeServiceEnum {
 	DeveloppementWebEtLogiciel = 7,
 	GestionDeCommunaute = 8
 }
-export const TypeService = {
+export const TypeService : { [key: string]: number } = {
 	'Consultation en présentiel': 1,
 	'Formation en présentiel': 2,
 	'Maintenance et réparation': 3,

@@ -23,6 +23,7 @@ export const getImageContents = action(async () : Promise<ImageContent[]> => {
 			// 'Content-Type': 'application/json',
 			'Authorization': `Bearer ${userSession.access_token}`
 		},
+		cache: 'no-store'
 	})
 
 	const content: any = await res.json()

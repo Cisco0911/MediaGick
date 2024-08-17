@@ -40,7 +40,7 @@ export interface Product {
 	id_createur: number | null;
 	logo: string | null;
 	images_offres: {id: number; chemin: string}[];
-	type?: typeof TypeProduct[keyof typeof TypeProduct];
+	type: typeof TypeProduct[keyof typeof TypeProduct];
 	id: number;
 	attributs_offres: Array<{
 		nom: string;

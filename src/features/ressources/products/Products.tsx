@@ -2,6 +2,7 @@ import {Product} from "@app/_lib/interfaces";
 import {getProducts} from "@app/_lib/actions/fetchData";
 import ResourceCard from "@features/ressources/components/ResourceCard";
 import React from "react";
+import {TypeProduct} from "@app/_lib/enums";
 
 
 type ProductsProps = {
@@ -22,6 +23,12 @@ export default async function Products({ filters }: ProductsProps) {
 
 	if (!products){
 		products = []
+	}
+
+	if (filters && filters.length > 0) {
+		const numericFilters = filters.map(filter => TypeProduct[filter]);
+		products = products.filter(product => numericFilters.includes(product.type))
+		// console.log(filters, numericFilters, products)
 	}
 
 	return (

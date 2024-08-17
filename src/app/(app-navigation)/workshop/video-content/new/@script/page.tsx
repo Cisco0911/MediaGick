@@ -1,5 +1,6 @@
 import Button from "@features/ui/components/Button";
 import React from "react";
+import Link from "next/link";
 
 
 export default function NewVideoContentByScriptPage() {
@@ -12,14 +13,16 @@ export default function NewVideoContentByScriptPage() {
 			<div className={"flex-grow"}>
 
 			</div>
-			<Button className={"w-full px-2 py-2 rounded-xl bg-custom_white text-lg font-semibold"}
-			        variant={"primary"}
-				// onClick={submit}
-				// state={submitState}
-				// busyIcon={BusyIcon}
-			>
-				Valider
-			</Button>
+			<Link className={"w-full"} href={"/workshop/video-content/new/settings"}>
+				<Button className={"w-full px-2 py-2 rounded-xl bg-custom_white text-lg font-semibold"}
+				        variant={"primary"}
+					// onClick={submit}
+					// state={submitState}
+					// busyIcon={BusyIcon}
+				>
+					Valider
+				</Button>
+			</Link>
 
 		</div>
 	)

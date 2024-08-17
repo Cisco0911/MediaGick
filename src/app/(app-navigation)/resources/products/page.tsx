@@ -8,6 +8,7 @@ import {z} from "zod";
 import {Product} from "@app/_lib/interfaces";
 import Filters from "@features/ui/components/Filters";
 import Loading from "@features/ui/components/Loading";
+import {TypeProduct} from "@app/_lib/enums";
 
 
 
@@ -19,23 +20,7 @@ type ProductsPageProps = {
 	}
 }
 
-const filters = [
-	"Électronique et Électroménager",
-	"Vêtements et Accessoires",
-	"Alimentation",
-	"Jouets et Jeux",
-	"Livres",
-	"Beauté et Santé",
-	"Maison et Jardin",
-	"Sports et Loisirs",
-	"Automobile",
-	"Informatique",
-	"Bricolage",
-	"Musique et Instruments",
-	"Art et Décoration",
-	"Bébés et Enfants",
-	"Animaux"
-]
+const filters = Object.keys(TypeProduct)
 
 
 export default function ProductsPage({ searchParams }: ProductsPageProps) {

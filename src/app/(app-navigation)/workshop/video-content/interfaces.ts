@@ -20,13 +20,14 @@ export interface VideoContent extends Omit<ImageContent, "id_offre">{
 
 
 
-
-
-export interface AddVideoContent {
-	id_modele: string;          
-	script: string;             
+export interface AddVideoContentSettingForm {
+	id_modele: string;
 	qualite: QualiteEnum;
 	position_filigrane: PositionFiligraneEnum;
-	filigrane: string;          
+	filigrane: string;
+}
+
+export interface AddVideoContent extends AddVideoContentSettingForm {
+	script: string;
 	call_to_action: string;
 }

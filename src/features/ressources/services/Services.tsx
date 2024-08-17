@@ -3,6 +3,7 @@ import React from "react";
 import {getServices} from "@app/(app-navigation)/resources/services/actions";
 import {Service} from "@app/(app-navigation)/resources/services/interfaces";
 import {isEmpty} from "@nextui-org/shared-utils";
+import {TypeService} from "@app/(app-navigation)/resources/services/enums";
 
 
 type ProductsProps = {
@@ -27,6 +28,12 @@ export default async function Services({ filters }: ProductsProps) {
 				<p>Aucun service ajouté</p>
 			</div>
 		)
+	}
+
+	if (filters && filters.length > 0) {
+		const numericFilters = filters.map(filter => TypeService[filter]);
+		services = services.filter(service => numericFilters.includes(service.type))
+		// console.log(filters, numericFilters, products)
 	}
 
 	return (

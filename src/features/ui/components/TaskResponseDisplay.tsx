@@ -4,6 +4,7 @@
 import toast from "react-hot-toast";
 import {useEffect} from "react";
 import {TaskStatus} from "@app/_lib/interfaces";
+import {useRouter} from "next/navigation";
 
 
 interface TaskResponseDisplayProps {
@@ -12,6 +13,7 @@ interface TaskResponseDisplayProps {
 
 export default function TaskResponseDisplay({wsUrl}: TaskResponseDisplayProps) {
 
+	const router = useRouter()
 
 	useEffect(() => {
 		console.log("open")
@@ -36,6 +38,7 @@ export default function TaskResponseDisplay({wsUrl}: TaskResponseDisplayProps) {
 				toast.error(createContentRes.error.message)
 			} else {
 				toast.success("Contenu ajoute avec succes !!")
+				router.refresh()
 			}
 		};
 

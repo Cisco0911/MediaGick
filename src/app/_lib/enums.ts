@@ -54,7 +54,7 @@ export const OfferNature = {
 // 	LOGICIELS_ET_APPLICATIONS = 15,
 // 	EBOOKS_ET_MEDIAS_NUMERIQUES = 16
 // }
-export const TypeProduct = {
+export const TypeProduct: { [key: string]: number } = {
 	"Electronique et electromenager": 1,
 	"Vetements et accessoires": 2,
 	"Alimentation": 3,

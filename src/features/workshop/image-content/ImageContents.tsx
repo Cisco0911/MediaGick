@@ -12,6 +12,7 @@ import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
 import {deleteImageContentById} from "@app/(app-navigation)/workshop/image-content/actions";
 import {CircularProgress} from "@nextui-org/progress";
+import {Skeleton} from "@nextui-org/skeleton";
 
 
 

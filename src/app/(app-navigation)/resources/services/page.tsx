@@ -4,6 +4,7 @@ import React, {Suspense} from "react";
 import Filters from "@features/ui/components/Filters";
 import Loading from "@features/ui/components/Loading";
 import Services from "@features/ressources/services/Services";
+import {TypeService} from "@app/(app-navigation)/resources/services/enums";
 
 
 
@@ -17,23 +18,7 @@ type ProductsPageProps = {
 	}
 }
 
-const filters = [
-	"Électronique et Électroménager",
-	"Vêtements et Accessoires",
-	"Alimentation",
-	"Jouets et Jeux",
-	"Livres",
-	"Beauté et Santé",
-	"Maison et Jardin",
-	"Sports et Loisirs",
-	"Automobile",
-	"Informatique",
-	"Bricolage",
-	"Musique et Instruments",
-	"Art et Décoration",
-	"Bébés et Enfants",
-	"Animaux"
-]
+const filters = Object.keys(TypeService)
 
 
 export default function ServicesPage({ searchParams }: ProductsPageProps) {
